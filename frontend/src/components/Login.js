@@ -21,17 +21,18 @@ function Login()
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
+            console.log(res.Status);
             if( res.firstName === "" )
             {
                 setMessage('Username/Password combination incorrect');
             }
-            else if(!res.Validated)
-            {
-                setMessage('Check your email to verify account');
-            }
+            // else if(!res.Validated)
+            // {
+            //     setMessage('Check your email to verify account');
+            // }
             else
             {
-                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName}
+                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName,status:res.Status}
                 localStorage.setItem('user_data', JSON.stringify(user));
                 
                 setMessage('');

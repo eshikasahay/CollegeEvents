@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-function Events()
+function Colleges()
 {
   var loginUserName;
   var loginPassword;
@@ -17,9 +17,9 @@ function Events()
     return(
     <div>  
         <br></br>
-      <h2 className="col text-center text">Events</h2>
+      <h2 className="col text-center text">Colleges</h2>
     </div>
     );
 };
 
-export default Events;
+export default Colleges;

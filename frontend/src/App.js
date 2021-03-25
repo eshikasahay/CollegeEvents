@@ -7,6 +7,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
+import RSOPage from './pages/RSOPage';
+import CollegePage from './pages/CollegePage';
+import CreateCollPage from './pages/CreateCollPage';
+import CreateRsoPage from './pages/CreateRsoPage';
+import CreateEventPage from './pages/CreateEventPage';
+import CreateRso from './components/CreateRso';
 
 function App() {
   return (
@@ -20,6 +26,21 @@ function App() {
         </Route>
         <Route path="/home" exact>
           <HomePage />
+        </Route>
+        <Route path="/rso" exact>
+          <RSOPage />
+        </Route>
+        <Route path="/college" exact>
+          <CollegePage />
+        </Route>
+        <Route path="/createRso" exact>
+          <CreateRsoPage />
+        </Route>
+        <Route path="/createColl" exact>
+          <CreateCollPage />
+        </Route>
+        <Route path="/createEvent" exact>
+          <CreateEventPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

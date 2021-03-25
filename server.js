@@ -30,16 +30,18 @@ app.post('/api/login', async (req, res, next) =>
     var fn = '';
     var ln = '';
     var email = '';
-    var valid = false;
+    // var valid = false;
     var usern = '';
+    var status = '';
 
-    if (result.length > 0 && hashPass.verify(password, result[0].Password))
+    if(result.length > 0 && hashPass.verify(password, result[0].Password))
     {
         fn = result[0].FirstName;
         ln = result[0].LastName;
         email = result[0].Email;
-        valid = result[0].Validated;
+        // valid = result[0].Validated;
         usern = result[0].UserName;
+        status = result[0].Type;
     }
 
     var ret = {
@@ -47,7 +49,8 @@ app.post('/api/login', async (req, res, next) =>
         lastName: ln,
         Email: email,
         UserName: usern,
-        Validated: valid,
+        // Validated: valid,
+        Status: status,
         error: ''
     };
 
@@ -68,7 +71,7 @@ app.post('/api/Register', async (req, res, next) =>
         UserName: login.toLowerCase(),
         Password: hashedPass,
         Type: type,
-        Validated: false
+        // Validated: false
     }
 
     try {
@@ -77,23 +80,23 @@ app.post('/api/Register', async (req, res, next) =>
 
       // using Twilio SendGrid's v3 Node.js Library
       // https://github.com/sendgrid/sendgrid-nodejs
-      const sgMail = require('@sendgrid/mail')
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-      const msg = {
-        to: email, // Change to your recipient
-        from: 'letscwhatyouknow@gmail.com', // Change to your verified sender
-        subject: 'Please Verify Your Email!',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: '<a href="http://localhost:3000/VerifyEmail/"<strong><button type="button">Click Me To Verify Account!</button></strong>',
-      }
-      sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent')
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+      // const sgMail = require('@sendgrid/mail')
+      // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+      // const msg = {
+      //   to: email, // Change to your recipient
+      //   from: 'letscwhatyouknow@gmail.com', // Change to your verified sender
+      //   subject: 'Please Verify Your Email!',
+      //   text: 'and easy to do anywhere, even with Node.js',
+      //   html: '<a href="http://localhost:3000/VerifyEmail/"<strong><button type="button">Click Me To Verify Account!</button></strong>',
+      // }
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     console.log('Email sent')
+      //   })
+      //   .catch((error) => {
+      //     console.error(error)
+      //   })
     }
     catch(e) {
       error = "Email/Username already in use";
@@ -103,7 +106,32 @@ app.post('/api/Register', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/CreateRso', async (req, res, next) =>
+{
+    var error = '';
 
+    const { title, college, description, username, total} = req.body;
+
+    const rso = {
+        Title: title,
+        College: college,
+        Description: description,
+        Student: username,
+        Total: total,
+        Accepted: false
+    }
+
+    try {
+      const db = client.db();
+      const result = await db.collection('RSO').insertOne(rso);
+    }
+    catch(e) {
+      error = "Cannot Request";
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 app.use((req, res, next) => 
 {

@@ -47,6 +47,12 @@ body {
 .title {
   font-family: Brush Script MT, Brush Script Std, cursive;
   font-size: 30px !important;
+  /* color: #61dafb !important; */
+  /* color: -webkit-linear-gradient(rgb(128, 27, 27), #333) !important; */
+  background: linear-gradient(
+            to right,#61dafb, #f1e884);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
 }
 
 .loginlabel {
@@ -114,4 +120,32 @@ body {
 .card-size {
   height: 500px !important;
   width: 500px !important;
+}
+
+.text {
+  font-family: 'Times New Roman', Times, serif; 
+}
+
+/* .custom-title {
+  text-align: center !important;
+} */
+
+.custom-link {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 27.5px !important;
+  /* background: white; */
+}
+
+a.button {
+  -webkit-appearance: button !important;
+  -moz-appearance: button !important;
+  appearance: button !important;
+
+  text-decoration: none;
+  color: white;
+}
+
+.description {
+  height: 100% !important;
+  overflow: scroll;
 }

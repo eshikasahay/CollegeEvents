@@ -1,7 +1,7 @@
-  import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Form,Button } from 'react-bootstrap';
 
-function Register()
+function CreateCollege()
 {
     var firstName;
     var lastName;
@@ -17,7 +17,7 @@ function Register()
     //     console.log(type);
     // };
 
-    const doRegister = async event => 
+    const doCreateColl = async event => 
     {
         event.preventDefault();
 
@@ -74,7 +74,7 @@ function Register()
     return(
       <div>
           <Form className="loginform">
-            <h3 className="loginlabel">Create An Account</h3>
+            <h3 className="loginlabel">Add a University</h3>
             <Form.Group controlId="formBasicFirst">
                 <Form.Control className="login-input" type="fname" placeholder="First Name" ref={(c) => firstName = c}/>
             </Form.Group>
@@ -102,7 +102,7 @@ function Register()
                 <option>Super Admin</option>
                 </Form.Control>
             </Form.Group>
-            <Button size="lg" variant="primary" type="submit" onClick={doRegister} block>
+            <Button size="lg" variant="primary" type="submit" onClick={doCreateColl} block>
                 Sign Up
             </Button>
             <div className="col text-center">
@@ -117,4 +117,4 @@ function Register()
     );
 };
 
-export default Register;
+export default CreateCollege;
