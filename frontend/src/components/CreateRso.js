@@ -29,7 +29,7 @@ function CreateRso()
         }
         
        
-        var obj = {title:title.value, college:college.value, description:description.value, username:user.userName, total:1};
+        var obj = {title:title.value, college:college.value, description:description.value, username:user.userName, members:user, total:1};
         var js = JSON.stringify(obj);
 
         try

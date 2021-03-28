@@ -142,7 +142,7 @@ a.button {
   appearance: button !important;
 
   text-decoration: none;
-  color: white;
+  color: rgb(252, 252, 175);
 }
 
 .description {

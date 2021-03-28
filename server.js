@@ -110,13 +110,15 @@ app.post('/api/CreateRso', async (req, res, next) =>
 {
     var error = '';
 
-    const { title, college, description, username, total} = req.body;
-
+    const { title, college, description, username, members, total} = req.body;
+    var mem = [];
+    mem[0] = members;
     const rso = {
         Title: title,
         College: college,
         Description: description,
-        Student: username,
+        CreatedBy: username,
+        Members: mem,
         Total: total,
         Accepted: false
     }
@@ -130,6 +132,52 @@ app.post('/api/CreateRso', async (req, res, next) =>
     }
 
     var ret = { error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getMyRso', async (req, res, next) =>
+{
+    var error = '';
+
+    const {user} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({CreatedBy:user}).toArray();
+      // console.log(results);
+      var length = results.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[i]);
+      }
+      // if(length<numQuestionsToSend)
+      // {
+      //   error.push("Not enough questions");
+      // }
+      // else
+      // {
+      //   var rand;
+      //   for(var i=0; i<numQuestionsToSend; i++)
+      //   {
+      //     rand = Math.floor(Math.random() * Math.floor(length));
+      //     while(arr.indexOf(rand) != -1)
+      //     {
+      //       rand = Math.floor(Math.random() * Math.floor(length));
+      //     }
+      //     arr.push(rand);
+      //     _ret.push(results[rand]);
+      //   }
+        
+      // }
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
     res.status(200).json(ret);
 });
 
