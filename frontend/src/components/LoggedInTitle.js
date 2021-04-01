@@ -29,7 +29,7 @@ function MyVerticallyCenteredModal(props) {
 const dologout = async event =>
   {
     event.preventDefault();
-    
+
     localStorage.removeItem("user_data")
     window.location.href = '/';
   }
@@ -46,7 +46,6 @@ function PageTitle()
   const doRSO = async event => 
   {
     event.preventDefault();
-    console.log("vfdvdf");
         var error = [];
 
         var obj = {user:user.userName};
@@ -60,14 +59,34 @@ function PageTitle()
             var res = JSON.parse(await response.text());
             console.log(res);
             localStorage.setItem('user_created_rso', JSON.stringify(res));
-            window.location.href = '/rso';
-            
+
+            var obj2 = {user:user.userName};
+            var js2 = JSON.stringify(obj2);
+            try
+            {    
+                const response2 = await fetch('http://localhost:5000/api/otherRSOs',
+                    {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+                var res2 = JSON.parse(await response2.text());
+                console.log(res2);
+                localStorage.setItem('other_rso', JSON.stringify(res2));
+                window.location.href = '/rso';
+                
+            }
+            catch(e)
+            {
+                alert(e.toString());
+                return;
+            }  
+                
         }
         catch(e)
         {
             alert(e.toString());
             return;
-        }    
+        }  
+      
+        
   };
   function createMarkup() 
   { 

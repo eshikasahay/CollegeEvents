@@ -17,7 +17,7 @@ function Colleges()
     return(
     <div>  
         <br></br>
-      <h2 className="col text-center text">Colleges</h2>
+      <h2 className="col text-center text"><b>Colleges</b></h2>
     </div>
     );
 };

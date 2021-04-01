@@ -17,7 +17,7 @@ function Events()
     return(
     <div>  
         <br></br>
-      <h2 className="col text-center text">Events</h2>
+      <h2 className="col text-center text"><b>Events</b></h2>
     </div>
     );
 };

@@ -145,6 +145,7 @@ app.post('/api/getMyRso', async (req, res, next) =>
     var arr = [];
     var _ret = [];
     var results = [];
+    var results2 = [];
     try{
       const db = client.db();
       results = await db.collection('RSO').find({CreatedBy:user}).toArray();
@@ -211,6 +212,74 @@ app.post('/api/searchAdmin', async (req, res, next) =>
     }
     
     var ret = { results: _ret, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/otherRSOs', async (req, res, next) =>
+{
+    var error = [];
+    const { user } = req.body;
+    var _ret = [];
+    var results = [];
+
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({ CreatedBy: { $ne: user } }).toArray();
+      // console.log(results);
+      var length = results.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[i]);
+      }
+      
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/joinRSO', async (req, res, next) =>
+{
+    var error = [];
+    const { member, title } = req.body;
+    var _ret = [];
+    var results = [];
+
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({ Title: title }).toArray();
+      var length = results[0].Members.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[0].Members[i]);
+      }
+      _ret.push(member);
+      console.log(_ret);
+      var query = 
+      { 
+          Title: title
+      };
+      
+      var newValues = 
+      {
+          $set:
+          {
+            Members : _ret,
+            Total : length+1
+          }
+      };
+
+      var result = await db.collection('RSO').updateOne(query,newValues);
+      console.log(result);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
     res.status(200).json(ret);
 });
 
