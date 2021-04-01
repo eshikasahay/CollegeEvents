@@ -110,12 +110,13 @@ app.post('/api/CreateRso', async (req, res, next) =>
 {
     var error = '';
 
-    const { title, college, description, username, members, total} = req.body;
+    const { title, college, admin, description, username, members, total} = req.body;
     var mem = [];
     mem[0] = members;
     const rso = {
         Title: title,
         College: college,
+        Admin: admin,
         Description: description,
         CreatedBy: username,
         Members: mem,
@@ -178,6 +179,38 @@ app.post('/api/getMyRso', async (req, res, next) =>
     }
     
     var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/searchAdmin', async (req, res, next) =>
+{
+    var error = [];
+    const { username } = req.body;
+    var _ret = 0;
+    
+    try{
+      const db = client.db();
+      const results = await db.collection('Users').find({
+          UserName: username,
+          Type: "Admin"
+      }).toArray();
+      var length = results.length;
+      
+      if(length <= 0)
+      {
+        error.push("Admin does not exist");
+      }
+      else
+      {
+        _ret = 1;
+      }
+    }
+    // }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: _ret, error: error };
     res.status(200).json(ret);
 });
 

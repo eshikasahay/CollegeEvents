@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Form,Button, InputGroup, FormControl } from 'react-bootstrap';
 
@@ -6,6 +7,7 @@ function CreateRso()
     var title;
     var college;
     var description;
+    var admin;
     const [message,setMessage] = useState('');
     var user = JSON.parse(localStorage.getItem("user_data"));
 
@@ -27,35 +29,56 @@ function CreateRso()
             setMessage(error);
             return;
         }
-        
        
-        var obj = {title:title.value, college:college.value, description:description.value, username:user.userName, members:user, total:1};
-        var js = JSON.stringify(obj);
+        var obj2 = {username:admin.value};
+        var js2 = JSON.stringify(obj2);
 
         try
         {    
-            const response = await fetch('http://localhost:5000/api/CreateRso',
-                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            const response2 = await fetch('http://localhost:5000/api/searchAdmin',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
 
-            var res = JSON.parse(await response.text());
-
-            if( res.error === "" )
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2);
+            if( res2.error.length === 0 )
             {
-                setMessage("RSO Requested. Confirmation Pending");
-                setTimeout(() => {
-                    window.location.href = '/rso';
-                  },4000);
+                var obj = {title:title.value, college:college.value, admin:admin.value, description:description.value, username:user.userName, members:user, total:1};
+                var js = JSON.stringify(obj);
+
+                try
+                {    
+                    const response = await fetch('http://localhost:5000/api/CreateRso',
+                        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+                    var res = JSON.parse(await response.text());
+                    console.log(res);
+                    if( res.error === "" )
+                    {
+                        setMessage("RSO Requested. Confirmation Pending");
+                    }
+                    else
+                    {
+                        setMessage(res.error);
+                    }
+                }
+                catch(e)
+                {
+                    alert(e.toString());
+                    return;
+                }   
             }
             else
             {
-                setMessage(res.error);
+                setMessage(res2.error);
             }
+ 
         }
         catch(e)
         {
             alert(e.toString());
             return;
         }    
+        
             
     }; 
 
@@ -68,6 +91,9 @@ function CreateRso()
             </Form.Group>
             <Form.Group controlId="formBasicLast">
                 <Form.Control className="login-input" type="description" placeholder="University" ref={(c) => college = c}/>
+            </Form.Group>
+            <Form.Group controlId="formBasicLast">
+                <Form.Control className="login-input" type="admin" placeholder="Admin Username" ref={(c) => admin = c}/>
             </Form.Group>
             {/* <InputGroup size="lg">
                 <InputGroup.Prepend>
