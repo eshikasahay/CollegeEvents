@@ -170,3 +170,7 @@ a.button {
 .rso-pending {
   color: red;
 }
+
+.approve {
+  color: rgb(23, 190, 23);
+}

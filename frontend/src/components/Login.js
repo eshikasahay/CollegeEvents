@@ -34,7 +34,27 @@ function Login()
             {
                 var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName,status:res.Status}
                 localStorage.setItem('user_data', JSON.stringify(user));
-                
+                if(res.Status === "Admin")
+                {
+                    var obj2 = {user:loginUserName.value,approved:false,members:3};
+                    var js2 = JSON.stringify(obj2);
+
+                    try
+                    {    
+                        const response2 = await fetch('http://localhost:5000/api/getAdminRSO',
+                            {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+                        var res2 = JSON.parse(await response2.text());
+                        localStorage.setItem('rso_to_approve', JSON.stringify(res2));
+                        
+                    }
+                    catch(e)
+                    {
+                        alert(e.toString());
+                        return;
+                    }
+                    
+                }
                 setMessage('');
                 window.location.href = '/home';
             }

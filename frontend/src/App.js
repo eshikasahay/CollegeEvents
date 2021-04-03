@@ -12,7 +12,8 @@ import CollegePage from './pages/CollegePage';
 import CreateCollPage from './pages/CreateCollPage';
 import CreateRsoPage from './pages/CreateRsoPage';
 import CreateEventPage from './pages/CreateEventPage';
-import CreateRso from './components/CreateRso';
+// import CreateRso from './components/CreateRso';
+import ApproveRSOPage from './pages/ApproveRSOPage';
 
 function App() {
   return (
@@ -41,6 +42,9 @@ function App() {
         </Route>
         <Route path="/createEvent" exact>
           <CreateEventPage />
+        </Route>
+        <Route path="/approveRSO" exact>
+          <ApproveRSOPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

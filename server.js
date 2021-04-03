@@ -283,6 +283,62 @@ app.post('/api/joinRSO', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/getAdminRSO', async (req, res, next) =>
+{
+    var error = '';
+
+    const {user, approved, members} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({Admin:user, Accepted:approved, Total:{ $gt: members }}).toArray();
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/approveRSO', async (req, res, next) =>
+{
+    var error = '';
+
+    const {title} = req.body;
+    var results = [];
+
+    try{
+      const db = client.db();
+      var query = 
+      { 
+          Title: title
+      };
+      
+      var newValues = 
+      {
+          $set:
+          {
+            Accepted : true
+          }
+      };
+
+      results = await db.collection('RSO').updateOne(query,newValues);
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');

@@ -4,7 +4,6 @@ import { Card } from 'react-bootstrap';
 import LoggedInTitle from '../components/LoggedInTitle';
 import Events from '../components/Events';
 import GoogleMap from '../components/GoogleMap';
-import Map from '../components/Map';
 
 const HomePage = () =>
 {
@@ -12,11 +11,11 @@ const HomePage = () =>
         <div>
             <LoggedInTitle />
             <Events />
-            <div className="col text-center">
+            {/* <div className="col text-center">
             <Card className="card-size">
                 <Card.Body><GoogleMap /></Card.Body>
             </Card>
-            </div>
+            </div> */}
             
         </div>
     );

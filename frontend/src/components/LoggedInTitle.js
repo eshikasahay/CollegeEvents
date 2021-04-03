@@ -98,7 +98,7 @@ function PageTitle()
     }
     else if(user.status === "Admin")
     {
-      return {__html: '<a href="/createEvent" class="button">Create Events</a>'};
+      return {__html: '<a href="/createEvent" class="button">Create Events</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/approveRSO" class="button">Approve RSOs</a>'};
       // return {__html: '<Button>Create Event</Button>'};
     }
     else if(user.status === "Super Admin")
