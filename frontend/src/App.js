@@ -14,6 +14,7 @@ import CreateRsoPage from './pages/CreateRsoPage';
 import CreateEventPage from './pages/CreateEventPage';
 // import CreateRso from './components/CreateRso';
 import ApproveRSOPage from './pages/ApproveRSOPage';
+import DeleteRSOPage from './pages/DeleteRSOPage';
 
 function App() {
   return (
@@ -45,6 +46,9 @@ function App() {
         </Route>
         <Route path="/approveRSO" exact>
           <ApproveRSOPage />
+        </Route>
+        <Route path="/deleteRSO" exact>
+          <DeleteRSOPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

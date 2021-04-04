@@ -482,6 +482,25 @@ app.post('/api/approveRSO', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/deleteRSO', async (req, res, next) =>
+{
+    var error = '';
+
+    const {title} = req.body;
+    var results = [];
+
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').remove({Title: title});
+      results = await db.collection('JoinedRSO').remove({Title:title});
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
 
 app.use((req, res, next) => 
 {
