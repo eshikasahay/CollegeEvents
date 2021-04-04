@@ -221,7 +221,7 @@ app.post('/api/otherRSOs', async (req, res, next) =>
     const { user } = req.body;
     var _ret = [];
     var results = [];
-
+    var flag = 0;
     try{
       const db = client.db();
       results = await db.collection('RSO').find({ CreatedBy: { $ne: user } }).toArray();
@@ -229,7 +229,21 @@ app.post('/api/otherRSOs', async (req, res, next) =>
       var length = results.length;
       for(var i=0; i<length; i++)
       {
-        _ret.push(results[i]);
+        flag = 0;
+        var memLength = results[i].Members.length;
+        for(var j=0; j<memLength; j++)
+        {
+          if(results[i].Members[j].userName === user)
+          {
+            flag = 1;
+            break;
+          }
+        }
+        if(!flag)
+        {
+          _ret.push(results[i]);
+        }
+        
       }
       
     }
@@ -237,43 +251,144 @@ app.post('/api/otherRSOs', async (req, res, next) =>
       error=e.toString();
     }
     
-    var ret = { results: results, error: error };
+    var ret = { results: _ret, error: error };
     res.status(200).json(ret);
 });
 
 app.post('/api/joinRSO', async (req, res, next) =>
 {
     var error = [];
+    var flag = 0;
     const { member, title } = req.body;
     var _ret = [];
     var results = [];
+    var length;
 
     try{
       const db = client.db();
       results = await db.collection('RSO').find({ Title: title }).toArray();
-      var length = results[0].Members.length;
+      length = results[0].Members.length;
       for(var i=0; i<length; i++)
       {
         _ret.push(results[0].Members[i]);
       }
-      _ret.push(member);
-      console.log(_ret);
-      var query = 
-      { 
-          Title: title
-      };
-      
-      var newValues = 
+      // console.log(!_ret.includes(member));
+      for(var i=0; i<length; i++)
       {
-          $set:
-          {
-            Members : _ret,
-            Total : length+1
-          }
-      };
+        if(_ret[i].userName === member.userName)
+        {
+          flag = 1;
+          break;
+        }
+      }
+      console.log(flag);
+      if(!flag)
+      {
+        _ret.push(member);
+        console.log(_ret);
+        var query = 
+        { 
+            Title: title
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Members : _ret,
+              Total : length+1
+            }
+        };
+  
+        var result = await db.collection('RSO').updateOne(query,newValues);
+        flag = true;
+        const user = {
+          Title: title,
+          College: results[0].College,
+          Description: results[0].Description,
+          Member: member.userName,
+          Total: length+1,
+          Accepted: results[0].Accepted,
+        }
+        const resultss = await db.collection('JoinedRSO').insertOne(user);
+        
+        newValues = 
+        {
+            $set:
+            {
+              Total : length+1
+            }
+        };
+  
+        var result = await db.collection('JoinedRSO').updateOne(query,newValues);
+      }
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error, existing:flag };
+    res.status(200).json(ret);
+});
 
-      var result = await db.collection('RSO').updateOne(query,newValues);
-      console.log(result);
+app.post('/api/leaveRSO', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { member, title } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({ Title: title }).toArray();
+      length = results[0].Members.length;
+      for(var i=0; i<length; i++)
+      {
+        if(results[0].Members[i].userName !== member.userName)
+        {
+          _ret.push(results[0].Members[i]);
+        }
+      }
+        console.log(_ret);
+        var query = 
+        { 
+            Title: title
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Members : _ret,
+              Total : length-1
+            }
+        };
+  
+        var result = await db.collection('RSO').updateOne(query,newValues);
+        // flag = true;
+        // const user = {
+        //   Title: title,
+        //   College: results[0].College,
+        //   Description: results[0].Description,
+        //   Member: member.userName,
+        //   Total: length+1,
+        //   Accepted: results[0].Accepted,
+        // }
+        // const resultss = await db.collection('JoinedRSO').insertOne(user);
+        
+        // newValues = 
+        // {
+        //     $set:
+        //     {
+        //       Total : length+1
+        //     }
+        // };
+  
+        var result2 = await db.collection('JoinedRSO').remove({Title: title, Member: member.userName});
+    
     }
     catch(e){
       error=e.toString();
@@ -296,6 +411,35 @@ app.post('/api/getAdminRSO', async (req, res, next) =>
       const db = client.db();
       results = await db.collection('RSO').find({Admin:user, Accepted:approved, Total:{ $gt: members }}).toArray();
       console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getJoinedRSO', async (req, res, next) =>
+{
+    var error = '';
+
+    const {user} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    var results2 = [];
+    try{
+      const db = client.db();
+      results = await db.collection('JoinedRSO').find({Member:user}).toArray();
+      // console.log(results);
+      var length = results.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[i]);
+      }
+    
     }
     catch(e){
       error=e.toString();

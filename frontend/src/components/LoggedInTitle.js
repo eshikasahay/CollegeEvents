@@ -70,6 +70,15 @@ function PageTitle()
                 var res2 = JSON.parse(await response2.text());
                 console.log(res2);
                 localStorage.setItem('other_rso', JSON.stringify(res2));
+                var obj3 = {user:user.userName};
+                var js3 = JSON.stringify(obj3);
+                const response3 = await fetch('http://localhost:5000/api/getjoinedRSO',
+                    {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+
+                var res3 = JSON.parse(await response3.text());
+                console.log(res3);
+                localStorage.setItem('joined_rso', JSON.stringify(res3));
+                console.log(res3);
                 window.location.href = '/rso';
                 
             }
