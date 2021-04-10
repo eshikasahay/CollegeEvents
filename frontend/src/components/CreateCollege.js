@@ -9,22 +9,54 @@ import {MapUpdate, GMapReact} from '../components/NewMap.js';
 function CreateCollege()
 {
     var name;
-    var lat, long;
     var description;
     var total;
     const [message,setMessage] = useState('');
     var type;
-
-    // const onChangeChoice = async event => {
-    //     type = event.target.value;
-    //     console.log(type);
-    // };
+    var user = JSON.parse(localStorage.getItem("user_data"));
 
     const doCreateColl = async event => 
     {
         event.preventDefault();  
         var location = JSON.parse(localStorage.getItem("location"));  
         console.log(location);
+        
+        if(!name.value || !total.value || !description.value || !location.lat || !location.lng)
+        {
+            setMessage("Please fill out all fields");
+            return;
+        }
+        if(Number(total.value) < 0)
+        {
+            setMessage("Total students cannot be negative");
+            return;
+        }
+
+        var obj = {name:name.value, total:Number(total.value), description:description.value, lat:location.lat, lng:location.lng, sadmin:user.userName};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch('http://localhost:5000/api/CreateCollege',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error === "" )
+            {
+                // setMessage("Account Created. \nCheck your email for verification link");
+                setMessage("Profile Created");
+            }
+            else
+            {
+                setMessage(res.error);
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
     }; 
 
 
@@ -87,7 +119,8 @@ function CreateCollege()
          <Button className="buttonsize" size="lg" variant="primary" type="submit" onClick={doCreateColl} block>
                 Create Profile
          </Button>
-         
+         <br></br>
+         <div className="col text-center">{message}</div>
          <br></br>
          <br></br>
           

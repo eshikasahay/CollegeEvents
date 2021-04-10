@@ -555,6 +555,33 @@ app.post('/api/deleteRSO', async (req, res, next) =>
 //     res.status(200).json(ret);
 // });
 
+app.post('/api/CreateCollege', async (req, res, next) =>
+{
+    var error = '';
+
+    const { name, total, description, lat, lng, sadmin} = req.body;
+    
+    const college = {
+        Name: name,
+        Total: total,
+        Description: description,
+        Latitude: lat,
+        Longitude: lng,
+        SuperAdmin: sadmin
+    }
+
+    try {
+      const db = client.db();
+      const result = await db.collection('University').insertOne(college);
+    }
+    catch(e) {
+      error = "Cannot Request";
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');
