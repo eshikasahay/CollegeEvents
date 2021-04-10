@@ -140,11 +140,14 @@ function RSO()
 
 };  
 
-  const doEdit = async event => 
-  {
-    event.preventDefault();
-    console.log(event.target.id);
-  };
+  // const doEdit = async event => 
+  // {
+  //   event.preventDefault();
+  //   var p = parseInt(event.target.id);
+  //   localStorage.setItem('edit_rso', JSON.stringify(rso.results[p]));
+  //   console.log(rso.results[p]);
+  //   window.location.href = '/editRSO';
+  // };
 
 
   const doDelete = async event => 
@@ -330,8 +333,8 @@ function RSO()
                 <h4><b>Organization: {item.Title}</b></h4>
                 <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
-                <Button id={rso_pos} onClick={doEdit}>Edit</Button>
-                &nbsp;&nbsp;
+                {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
+                &nbsp;&nbsp; */}
                 <Button variant="danger" id={rso_pos} onClick={doDelete}>Delete</Button>
               </div>
               </div>)
@@ -342,8 +345,8 @@ function RSO()
                 <h4><b>Organization: {item.Title}</b></h4>
                 <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
-                <Button id={rso_pos} onClick={doEdit}>Edit</Button>
-                &nbsp;&nbsp;
+                {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
+                &nbsp;&nbsp; */}
                 <Button variant="danger" id={rso_pos} onClick={doDelete}>Delete</Button>
               </div>
             </div>)

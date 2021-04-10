@@ -387,7 +387,7 @@ app.post('/api/leaveRSO', async (req, res, next) =>
         //     }
         // };
   
-        var result2 = await db.collection('JoinedRSO').remove({Title: title, Member: member.userName});
+        var result2 = await db.collection('JoinedRSO').deleteOne({Title: title, Member: member.userName});
     
     }
     catch(e){
@@ -491,8 +491,8 @@ app.post('/api/deleteRSO', async (req, res, next) =>
 
     try{
       const db = client.db();
-      results = await db.collection('RSO').remove({Title: title});
-      results = await db.collection('JoinedRSO').remove({Title:title});
+      results = await db.collection('RSO').deleteOne({Title: title});
+      results = await db.collection('JoinedRSO').deleteMany({Title:title});
     }
     catch(e){
       error=e.toString();
@@ -501,6 +501,59 @@ app.post('/api/deleteRSO', async (req, res, next) =>
     var ret = { results: results, error: error };
     res.status(200).json(ret);
 });
+
+// app.post('/api/editRSO', async (req, res, next) =>
+// {
+//     var error = '';
+
+//     const {title, newTitle, newCollege, newAdmin, newDesc} = req.body;
+//     var results = [];
+//     var result = [];
+//     try{
+//       const db = client.db();
+
+//       var query = 
+//       { 
+//           Title: title
+//       };
+      
+//       var newValues = 
+//       {
+//           $set:
+//           {
+//             Title: newTitle,
+//             College: newCollege,
+//             Admin: newAdmin,
+//             Description: newDesc
+//           }
+//       };
+
+//       results = await db.collection('RSO').updateOne(query,newValues);
+//       console.log(results);
+//       query = 
+//       { 
+//           Title: title
+//       };
+      
+//       newValues = 
+//       {
+//           $set:
+//           {
+//             Title: newTitle,
+//             College: newCollege,
+//             Description: newDesc
+//           }
+//       };
+
+//       result = await db.collection('JoinedRSO').updateOne(query,newValues);
+//     }
+//     catch(e){
+//       error=e.toString();
+//     }
+    
+//     var ret = { results: results, error: error };
+//     res.status(200).json(ret);
+// });
 
 app.use((req, res, next) => 
 {

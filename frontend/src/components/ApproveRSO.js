@@ -66,7 +66,8 @@ function ApproveRSO()
 
     return(
       <div>
-          <h4 className="text col text-center"><u><b>Pending Approvals</b></u></h4>
+          <br></br>
+          <h2 className="text col text-center"><b>Pending Approvals</b></h2>
         <br></br>
         <div className="container">
           {rso_to_approve.results.map(function(item) {

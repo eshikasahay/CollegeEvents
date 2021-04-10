@@ -174,3 +174,17 @@ a.button {
 .approve {
   color: rgb(23, 190, 23);
 }
+
+.more {
+  margin-left: 5px;
+}
+
+.collsize {
+  width: 600px !important;
+  align-self: center !important;
+}
+
+.buttonsize {
+  width: 30% !important;
+  
+}
