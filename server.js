@@ -33,6 +33,7 @@ app.post('/api/login', async (req, res, next) =>
     // var valid = false;
     var usern = '';
     var status = '';
+    var college = '';
 
     if(result.length > 0 && hashPass.verify(password, result[0].Password))
     {
@@ -42,6 +43,7 @@ app.post('/api/login', async (req, res, next) =>
         // valid = result[0].Validated;
         usern = result[0].UserName;
         status = result[0].Type;
+        college = result[0].College;
     }
 
     var ret = {
@@ -51,6 +53,7 @@ app.post('/api/login', async (req, res, next) =>
         UserName: usern,
         // Validated: valid,
         Status: status,
+        College: college,
         error: ''
     };
 
@@ -61,13 +64,14 @@ app.post('/api/Register', async (req, res, next) =>
 {
     var error = '';
 
-    const { firstname, lastname, email, login, password, type } = req.body;
+    const { firstname, lastname, email, college, login, password, type } = req.body;
     var hashedPass = hashPass.generate(password);
 
     const user = {
         FirstName: firstname,
         LastName: lastname,
         Email: email,
+        College: college,
         UserName: login.toLowerCase(),
         Password: hashedPass,
         Type: type,
@@ -76,7 +80,17 @@ app.post('/api/Register', async (req, res, next) =>
 
     try {
       const db = client.db();
-      const result = await db.collection('Users').insertOne(user);
+      const result1 = await db.collection('University').find({Name: college}).toArray();
+      console.log(result1);
+      if(result1.length <= 0 && college !== "")
+      {
+        error = "University does not exist";
+      }
+      else
+      {
+        const result = await db.collection('Users').insertOne(user);
+      }
+      
 
       // using Twilio SendGrid's v3 Node.js Library
       // https://github.com/sendgrid/sendgrid-nodejs
@@ -579,6 +593,34 @@ app.post('/api/CreateCollege', async (req, res, next) =>
     }
 
     var ret = { error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getColleges', async (req, res, next) =>
+{
+    var error = '';
+
+    const { name} = req.body;
+    
+    // const college = {
+    //     Name: name,
+    //     Total: total,
+    //     Description: description,
+    //     Latitude: lat,
+    //     Longitude: lng,
+    //     SuperAdmin: sadmin
+    // }
+    var result = [];
+    try {
+      const db = client.db();
+      result = await db.collection('University').find().toArray();
+      console.log(result);
+    }
+    catch(e) {
+      error=e.toString();
+    }
+
+    var ret = { result:result, error: error };
     res.status(200).json(ret);
 });
 

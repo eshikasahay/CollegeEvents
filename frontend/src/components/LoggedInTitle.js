@@ -42,6 +42,31 @@ function PageTitle()
   const [message,setMessage] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   
+  const doCollege = async event => 
+  {
+    event.preventDefault();
+    var error = [];
+
+        var obj = {user:user.userName};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch('http://localhost:5000/api/getColleges',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+            console.log(res);
+            localStorage.setItem('colleges', JSON.stringify(res));
+            window.location.href = "/college";
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }  
+
+  };
 
   const doRSO = async event => 
   {
@@ -125,7 +150,7 @@ function PageTitle()
         <Nav className="mr-auto">
           <Nav.Link className="login-name" href="/home">Events</Nav.Link>
           <Nav.Link className="login-name" onClick={doRSO}>RSOs</Nav.Link>
-          <Nav.Link className="login-name" href="/college">Colleges</Nav.Link>
+          <Nav.Link className="login-name" onClick={doCollege}>Colleges</Nav.Link>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <div dangerouslySetInnerHTML={createMarkup()} className="custom-link" />
         </Nav>

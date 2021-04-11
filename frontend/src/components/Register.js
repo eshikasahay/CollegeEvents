@@ -9,6 +9,7 @@ function Register()
     var userName;
     var password;
     var confirmPass;
+    var college;
     const [message,setMessage] = useState('');
     var type;
 
@@ -24,15 +25,19 @@ function Register()
         var flag = 0;
         var error = [];
         console.log(type.value);
-        if (type.value === "" || type.value === "Choose Account Type..." || firstName.value === "" || lastName.value === "" || email.value === "" || password.value === "" || confirmPass.value === "") {
+
+        if(type.value === "Super Admin" && college.value === "" && firstName.value && lastName.value && email.value && password.value && confirmPass.value)
+        {
             flag = 1;
-            error.push("Please fill out all fields\n");
         }
 
-        if (flag === 1)
+        if(flag === 0)
         {
-            setMessage(error);
-            return;
+            if (type.value === "" || type.value === "Choose Account Type..." || firstName.value === "" || college.value === "" || lastName.value === "" || email.value === "" || password.value === "" || confirmPass.value === "") {
+                error.push("Please fill out all fields\n");
+                setMessage(error);
+                return;
+            }
         }
         
         if(password.value !== confirmPass.value)
@@ -41,7 +46,8 @@ function Register()
             setMessage(error);
             return;
         }
-        var obj = {firstname:firstName.value, lastname:lastName.value, email:email.value, login:userName.value, password:password.value, type:type.value};
+
+        var obj = {firstname:firstName.value, lastname:lastName.value, email:email.value, college:college.value, login:userName.value, password:password.value, type:type.value};
         var js = JSON.stringify(obj);
 
         try
@@ -83,6 +89,9 @@ function Register()
             </Form.Group>
             <Form.Group controlId="formBasicEmailAdr">
                 <Form.Control className="login-input" type="email" placeholder="Email" ref={(c) => email = c}/>
+            </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+                <Form.Control className="login-input" type="college" placeholder="University  (Blank if Super Admin)" ref={(c) => college = c}/>
             </Form.Group>
             <Form.Group controlId="formBasicUsername">
                 <Form.Control className="login-input" type="username" placeholder="Username" ref={(c) => userName = c}/>

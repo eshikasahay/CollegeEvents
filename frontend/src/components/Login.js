@@ -32,7 +32,7 @@ function Login()
             // }
             else
             {
-                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName,status:res.Status}
+                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName,status:res.Status,college:res.College}
                 localStorage.setItem('user_data', JSON.stringify(user));
                 if(res.Status === "Admin")
                 {

@@ -237,6 +237,16 @@ function RSO()
     var p = parseInt(event.target.id);
     console.log(other_rso.results[p].Title);
     
+    if(user.status === "Super Admin")
+    {
+      setMessage("Super Admin cannot join RSO");
+      return;
+    }
+    if(user.college !== other_rso.results[p].College)
+    {
+      setMessage("Cannot join another University's RSO");
+      return;
+    }
     var obj = {member:user, title:other_rso.results[p].Title};
         var js = JSON.stringify(obj);
 
@@ -331,7 +341,7 @@ function RSO()
               <div className="container">
                 <h5 className="rso-pending">(Pending Admin Approval)</h5>
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
@@ -343,7 +353,7 @@ function RSO()
               <img src="img_avatar.png" alt="Avatar" style={divStyle} />
               <div className="container">
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
@@ -362,7 +372,7 @@ function RSO()
               <div className="container">
                 <h5 className="rso-pending">(Pending Admin Approval)</h5>
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 <Button id={joined_rso_pos} variant="danger" onClick={doLeave}>Leave</Button>
               </div>
@@ -372,7 +382,7 @@ function RSO()
               <img src="img_avatar.png" alt="Avatar" style={divStyle} />
               <div className="container">
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 <Button id={joined_rso_pos} variant="danger" onClick={doLeave}>Leave</Button>
                 
@@ -397,7 +407,7 @@ function RSO()
               <div className="container">
                 <h5 className="rso-pending">(Pending Admin Approval)</h5>
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 <Button id={other_rso_pos} onClick={doJoin}>Join</Button>
                 <div className="rso-pending">{message}</div>
@@ -408,7 +418,7 @@ function RSO()
               <img src="img_avatar.png" alt="Avatar" style={divStyle} />
               <div className="container">
                 <h4><b>Organization: {item.Title}</b></h4>
-                <h6>College: {item.College}&nbsp;&nbsp;|&nbsp;&nbsp;Total Members: {item.Total}</h6>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 <Button id={other_rso_pos} onClick={doJoin}>Join</Button>
                 <div className="rso-pending">{message}</div>
