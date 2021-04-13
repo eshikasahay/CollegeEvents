@@ -186,5 +186,8 @@ a.button {
 
 .buttonsize {
   width: 30% !important;
-  
+}
+
+.topic {
+  color: rgb(0, 162, 255) !important;
 }

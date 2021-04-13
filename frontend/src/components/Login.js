@@ -35,6 +35,28 @@ function Login()
                 var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,userName:res.UserName,status:res.Status,college:res.College}
                 localStorage.setItem('user_data', JSON.stringify(user));
                 console.log(user);
+
+                var obj2 = {college:res.College};
+        var js2 = JSON.stringify(obj2);
+
+        try
+        {    
+            const response2 = await fetch('http://localhost:5000/api/getEvents',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2);
+            localStorage.setItem('public_events', JSON.stringify(res2.public));
+            localStorage.setItem('private_events', JSON.stringify(res2.private));
+
+    
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }  
+
                 if(res.Status === "Admin")
                 {
                     var obj2 = {user:loginUserName.value,approved:false,members:3,college:res.College};

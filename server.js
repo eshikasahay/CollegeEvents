@@ -642,6 +642,7 @@ app.post('/api/CreateEvent', async (req, res, next) =>
         Description: description,
         Phone: phone,
         Email: email,
+        Total: 1,
         Admin: admin,
         Latitude: lat,
         Longitude: lng,

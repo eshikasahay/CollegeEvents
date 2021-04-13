@@ -68,6 +68,34 @@ function PageTitle()
 
   };
 
+  const doEvents = async event =>
+  {
+    event.preventDefault();
+    var error = [];
+
+        var obj = {college:user.college};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch('http://localhost:5000/api/getEvents',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+            console.log(res);
+            localStorage.setItem('public_events', JSON.stringify(res.public));
+            localStorage.setItem('private_events', JSON.stringify(res.private));
+
+            window.location.href = "/home";
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }  
+
+  };
+
   const doRSO = async event => 
   {
     event.preventDefault();
@@ -148,7 +176,7 @@ function PageTitle()
        <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="#home" className="title">..Cvents..</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link className="login-name" href="/home">Events</Nav.Link>
+          <Nav.Link className="login-name" onClick={doEvents}>Events</Nav.Link>
           <Nav.Link className="login-name" onClick={doRSO}>RSOs</Nav.Link>
           <Nav.Link className="login-name" onClick={doCollege}>Colleges</Nav.Link>
           &nbsp;&nbsp;&nbsp;&nbsp;
