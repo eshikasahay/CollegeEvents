@@ -36,20 +36,28 @@ function Login()
                 localStorage.setItem('user_data', JSON.stringify(user));
                 console.log(user);
 
-                var obj2 = {college:res.College};
-        var js2 = JSON.stringify(obj2);
-
+                var obj3 = {user:user.userName};
+        var js3 = JSON.stringify(obj3);
         try
-        {    
-            const response2 = await fetch('http://localhost:5000/api/getEvents',
-                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+        {
 
-            var res2 = JSON.parse(await response2.text());
-            console.log(res2);
-            localStorage.setItem('public_events', JSON.stringify(res2.public));
-            localStorage.setItem('private_events', JSON.stringify(res2.private));
+            const response3 = await fetch('http://localhost:5000/api/getAttendingEvents',
+                {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
 
-    
+            var res3 = JSON.parse(await response3.text());
+            console.log(res3);
+            localStorage.setItem('attending_events', JSON.stringify(res3.results));
+            var obj4 = {college:user.college, attend:res3.results};
+            var js4 = JSON.stringify(obj4);
+            const response4 = await fetch('http://localhost:5000/api/getEvents',
+                {method:'POST',body:js4,headers:{'Content-Type': 'application/json'}});
+
+            var res4 = JSON.parse(await response4.text());
+            console.log(res4);
+            localStorage.setItem('public_events', JSON.stringify(res4.public));
+            localStorage.setItem('private_events', JSON.stringify(res4.private));
+
+            window.location.href = "/home";
         }
         catch(e)
         {

@@ -73,11 +73,20 @@ function PageTitle()
     event.preventDefault();
     var error = [];
 
-        var obj = {college:user.college};
-        var js = JSON.stringify(obj);
-
+        
+        var obj2 = {user:user.userName};
+        var js2 = JSON.stringify(obj2);
         try
-        {    
+        {
+
+            const response2 = await fetch('http://localhost:5000/api/getAttendingEvents',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2);
+            localStorage.setItem('attending_events', JSON.stringify(res2.results));
+            var obj = {college:user.college, attend:res2.results};
+            var js = JSON.stringify(obj);
             const response = await fetch('http://localhost:5000/api/getEvents',
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 

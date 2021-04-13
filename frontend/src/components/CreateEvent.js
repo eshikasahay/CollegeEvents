@@ -39,7 +39,7 @@ function CreateEvent()
         }
         
         
-        var obj = {name:name.value, location:location.value, date:date.value, time:time.value, type:type.value, college:user.college, description:description.value, phone:phone.value, email:email.value, admin:user.userName, lat:loc.lat, lng:loc.lng};
+        var obj = {name:name.value, location:location.value, date:date.value, time:time.value, type:type.value, college:user.college, description:description.value, phone:phone.value, email:email.value, admin:user.userName, lat:loc.lat, lng:loc.lng, user:user};
         var js = JSON.stringify(obj);
 
         try

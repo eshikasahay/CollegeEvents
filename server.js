@@ -630,8 +630,9 @@ app.post('/api/CreateEvent', async (req, res, next) =>
 {
     var error = '';
 
-    const { name, location, time, date, type, college, description, phone, email, admin, lat, lng} = req.body;
-    
+    const { name, location, time, date, type, college, description, phone, email, admin, lat, lng, user} = req.body;
+    var mem = [];
+    mem.push(user);
     const event = {
         Name: name,
         Location: location,
@@ -642,6 +643,7 @@ app.post('/api/CreateEvent', async (req, res, next) =>
         Description: description,
         Phone: phone,
         Email: email,
+        Members: mem,
         Total: 1,
         Admin: admin,
         Latitude: lat,
@@ -665,22 +667,168 @@ app.post('/api/CreateEvent', async (req, res, next) =>
 app.post('/api/getEvents', async (req, res, next) =>
 {
     var error = '';
-
-    const { college } = req.body;
+    var flag = 0;
+    const { college, attend } = req.body;
     var result = [], result2 = [];
-
+    var ret1 = [], ret2 = [];
+    var length = attend.length;
     try {
       const db = client.db();
       result = await db.collection('Events').find({Type:"Public Event", Accepted:true}).toArray();
       result2 = await db.collection('Events').find({Type:"Private Event", College:college, Accepted:true}).toArray();
-      console.log(result);
-      console.log(result2);
+      var l = result.length;
+      for(var i=0; i<l; i++)
+      {
+        for(var j=0; j<length; j++)
+        {
+          if(result[i].Name === attend[j].Name)
+          {
+            flag = 1;
+          }
+        }
+        if(flag === 0)
+        {
+          ret1.push(result[i]);
+        }
+        flag = 0;
+      }
+      l = result2.length;
+      for(var i=0; i<l; i++)
+      {
+        for(var j=0; j<length; j++)
+        {
+          if(result2[i].Name === attend[j].Name)
+          {
+            flag = 1;
+          }
+        }
+        if(flag === 0)
+        {
+          ret2.push(result2[i]);
+        }
+        flag = 0;
+      }
+      console.log(ret1);
+      console.log(ret2);
     }
     catch(e) {
       error=e.toString();
     }
 
-    var ret = { public:result, private:result2, error: error };
+    var ret = { public:ret1, private:ret2, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/joinPrivEvent', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { member, name } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: name }).toArray();
+      length = results[0].Members.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[0].Members[i]);
+      }
+      // console.log(!_ret.includes(member));
+      for(var i=0; i<length; i++)
+      {
+        if(_ret[i].userName === member.userName)
+        {
+          flag = 1;
+          break;
+        }
+      }
+      console.log(flag);
+      if(!flag)
+      {
+        _ret.push(member);
+        console.log(_ret);
+        var query = 
+        { 
+            Name: name
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Members : _ret,
+              Total : length+1
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+      //   flag = true;
+      //   const user = {
+      //     Name: title,
+      //     College: results[0].College,
+      //     Description: results[0].Description,
+      //     Member: member.userName,
+      //     Total: length+1,
+      //   }
+      //   const resultss = await db.collection('JoinedEvents').insertOne(user);
+        
+      //   newValues = 
+      //   {
+      //       $set:
+      //       {
+      //         Total : length+1
+      //       }
+      //   };
+  
+      //   var result = await db.collection('JoinedRSO').updateOne(query,newValues);
+      }
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error, existing:flag };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getAttendingEvents', async (req, res, next) =>
+{
+    var error = '';
+
+    const {user} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    var results2 = [];
+    var flag = 0;
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find().toArray();
+      // console.log(results);
+      var length = results.length;
+      for(var i=0; i<length; i++)
+      {
+        var l = results[i].Members.length;
+        for(var j=0; j<l; j++)
+        {
+          if(user === results[i].Members[j].userName)
+          {
+            _ret.push(results[i]);
+          }
+        }
+      }
+    console.log(_ret);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: _ret, error: error };
     res.status(200).json(ret);
 });
 
