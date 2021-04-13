@@ -30,6 +30,7 @@ function Colleges()
               {/* <img src="img_avatar.png" alt="Avatar" style={divStyle} /> */}
               <div className="container">
                 <h4><b>{item.Name}</b></h4>
+                <h6>Address: {item.Address}</h6>
                 <h6>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>

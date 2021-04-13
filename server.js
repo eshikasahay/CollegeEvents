@@ -200,17 +200,18 @@ app.post('/api/getMyRso', async (req, res, next) =>
 app.post('/api/searchAdmin', async (req, res, next) =>
 {
     var error = [];
-    const { username } = req.body;
+    const { username,college } = req.body;
     var _ret = 0;
     
     try{
       const db = client.db();
       const results = await db.collection('Users').find({
           UserName: username,
+          College: college,
           Type: "Admin"
       }).toArray();
       var length = results.length;
-      
+      console.log(results);
       if(length <= 0)
       {
         error.push("Admin does not exist");
@@ -416,7 +417,7 @@ app.post('/api/getAdminRSO', async (req, res, next) =>
 {
     var error = '';
 
-    const {user, approved, members} = req.body;
+    const {user, approved, members, college} = req.body;
     // console.log(user);
     var arr = [];
     var _ret = [];
@@ -573,12 +574,13 @@ app.post('/api/CreateCollege', async (req, res, next) =>
 {
     var error = '';
 
-    const { name, total, description, lat, lng, sadmin} = req.body;
+    const { name, total, description, address, lat, lng, sadmin} = req.body;
     
     const college = {
         Name: name,
         Total: total,
         Description: description,
+        Address: address,
         Latitude: lat,
         Longitude: lng,
         SuperAdmin: sadmin
@@ -621,6 +623,63 @@ app.post('/api/getColleges', async (req, res, next) =>
     }
 
     var ret = { result:result, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/CreateEvent', async (req, res, next) =>
+{
+    var error = '';
+
+    const { name, location, time, date, type, college, description, phone, email, admin, lat, lng} = req.body;
+    
+    const event = {
+        Name: name,
+        Location: location,
+        Date: date,
+        Time: time,
+        Type: type,
+        College: college,
+        Description: description,
+        Phone: phone,
+        Email: email,
+        Admin: admin,
+        Latitude: lat,
+        Longitude: lng,
+        Accepted: false
+    }
+
+    try {
+      const db = client.db();
+      const result = await db.collection('Events').insertOne(event);
+    }
+    catch(e) {
+      error = "Cannot Request";
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
+
+
+app.post('/api/getEvents', async (req, res, next) =>
+{
+    var error = '';
+
+    const { college } = req.body;
+    var result = [], result2 = [];
+
+    try {
+      const db = client.db();
+      result = await db.collection('Events').find({Type:"Public Event", Accepted:true}).toArray();
+      result2 = await db.collection('Events').find({Type:"Private Event", College:college, Accepted:true}).toArray();
+      console.log(result);
+      console.log(result2);
+    }
+    catch(e) {
+      error=e.toString();
+    }
+
+    var ret = { public:result, private:result2, error: error };
     res.status(200).json(ret);
 });
 

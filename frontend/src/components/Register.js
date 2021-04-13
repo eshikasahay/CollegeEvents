@@ -61,9 +61,9 @@ function Register()
             {
                 // setMessage("Account Created. \nCheck your email for verification link");
                 setMessage("Account Created");
-                setTimeout(() => {
-                    window.location.href = '/';
-                  },5000);
+                // setTimeout(() => {
+                //     window.location.href = '/';
+                //   },5000);
             }
             else
             {

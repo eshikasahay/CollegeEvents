@@ -19,7 +19,7 @@ function CreateRso()
         var flag = 0;
         var error = [];
 
-        if (title.value === "" || college.value === "" || description.value === "") {
+        if (title.value === "" || description.value === "") {
             flag = 1;
             error.push("Please fill out all fields\n");
         }
@@ -30,7 +30,7 @@ function CreateRso()
             return;
         }
        
-        var obj2 = {username:admin.value};
+        var obj2 = {username:admin.value,college:user.college};
         var js2 = JSON.stringify(obj2);
 
         try
@@ -42,7 +42,7 @@ function CreateRso()
             console.log(res2);
             if( res2.error.length === 0 )
             {
-                var obj = {title:title.value, college:college.value, admin:admin.value, description:description.value, username:user.userName, members:user, total:1};
+                var obj = {title:title.value, college:user.college, admin:admin.value, description:description.value, username:user.userName, members:user, total:1};
                 var js = JSON.stringify(obj);
 
                 try
@@ -89,9 +89,9 @@ function CreateRso()
             <Form.Group controlId="formBasicFirst">
                 <Form.Control className="login-input" type="title" placeholder="RSO Name" ref={(c) => title = c}/>
             </Form.Group>
-            <Form.Group controlId="formBasicLast">
+            {/* <Form.Group controlId="formBasicLast">
                 <Form.Control className="login-input" type="description" placeholder="University" ref={(c) => college = c}/>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId="formBasicLast">
                 <Form.Control className="login-input" type="admin" placeholder="Admin Username" ref={(c) => admin = c}/>
             </Form.Group>

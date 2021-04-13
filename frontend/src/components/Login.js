@@ -11,7 +11,7 @@ function Login()
   const doLogin = async event => 
     {
         event.preventDefault();
-
+        var res;
         var obj = {login:loginUserName.value,password:loginPassword.value};
         var js = JSON.stringify(obj);
 
@@ -20,7 +20,7 @@ function Login()
             const response = await fetch('http://localhost:5000/api/login',
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-            var res = JSON.parse(await response.text());
+            res = JSON.parse(await response.text());
             console.log(res.Status);
             if( res.firstName === "" )
             {
@@ -32,13 +32,14 @@ function Login()
             // }
             else
             {
-                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,id:res.id,userName:res.UserName,status:res.Status,college:res.College}
+                var user = {email:res.Email,firstName:res.firstName,lastName:res.lastName,userName:res.UserName,status:res.Status,college:res.College}
                 localStorage.setItem('user_data', JSON.stringify(user));
+                console.log(user);
                 if(res.Status === "Admin")
                 {
-                    var obj2 = {user:loginUserName.value,approved:false,members:3};
+                    var obj2 = {user:loginUserName.value,approved:false,members:3,college:res.College};
                     var js2 = JSON.stringify(obj2);
-
+                    console.log(obj2);
                     try
                     {    
                         const response2 = await fetch('http://localhost:5000/api/getAdminRSO',

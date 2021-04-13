@@ -8,7 +8,7 @@ import {MapUpdate, GMapReact} from '../components/NewMap.js';
 
 function CreateCollege()
 {
-    var name;
+    var name, address;
     var description;
     var total;
     const [message,setMessage] = useState('');
@@ -32,7 +32,7 @@ function CreateCollege()
             return;
         }
 
-        var obj = {name:name.value, total:Number(total.value), description:description.value, lat:location.lat, lng:location.lng, sadmin:user.userName};
+        var obj = {name:name.value, total:Number(total.value), description:description.value, address:address.value, lat:location.lat, lng:location.lng, sadmin:user.userName};
         var js = JSON.stringify(obj);
 
         try
@@ -83,6 +83,9 @@ function CreateCollege()
                 </Form.Group> */}
                 <Form.Group controlId="formBasicUsername">
                     <Form.Control className="login-input" type="username" placeholder="Total Students" ref={(c) => total = c}/>
+                </Form.Group>
+                <Form.Group controlId="formBasicUsername">
+                    <Form.Control className="login-input" type="username" placeholder="Address" ref={(c) => address = c}/>
                 </Form.Group>
                 <textarea id="descriptionRso" name="description" rows="4" cols="78" placeholder="  Description" ref={(c) => description = c}></textarea>
                 
