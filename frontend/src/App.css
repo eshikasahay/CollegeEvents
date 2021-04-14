@@ -163,8 +163,10 @@ a.button {
 
 /* Add some padding inside the card container */
 .container {
-  padding: 2px 16px;
-  width: 50% !important;
+  padding: 2px 16px !important;
+  /* margin-left: 10px !important; */
+  /* margin-right: 10px !important; */
+  width: 90% !important;
 }
 
 .rso-pending {
@@ -191,3 +193,4 @@ a.button {
 .topic {
   color: rgb(0, 162, 255) !important;
 }
+

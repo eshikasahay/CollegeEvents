@@ -730,7 +730,83 @@ app.post('/api/joinPrivEvent', async (req, res, next) =>
 
     try{
       const db = client.db();
-      results = await db.collection('Events').find({ Name: name }).toArray();
+      results = await db.collection('Events').find({ Name: name, Type: "Private Event" }).toArray();
+      length = results[0].Members.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[0].Members[i]);
+      }
+      // console.log(!_ret.includes(member));
+      for(var i=0; i<length; i++)
+      {
+        if(_ret[i].userName === member.userName)
+        {
+          flag = 1;
+          break;
+        }
+      }
+      console.log(flag);
+      if(!flag)
+      {
+        _ret.push(member);
+        console.log(_ret);
+        var query = 
+        { 
+            Name: name
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Members : _ret,
+              Total : length+1
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+      //   flag = true;
+      //   const user = {
+      //     Name: title,
+      //     College: results[0].College,
+      //     Description: results[0].Description,
+      //     Member: member.userName,
+      //     Total: length+1,
+      //   }
+      //   const resultss = await db.collection('JoinedEvents').insertOne(user);
+        
+      //   newValues = 
+      //   {
+      //       $set:
+      //       {
+      //         Total : length+1
+      //       }
+      //   };
+  
+      //   var result = await db.collection('JoinedRSO').updateOne(query,newValues);
+      }
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error, existing:flag };
+    res.status(200).json(ret);
+});
+
+app.post('/api/joinPubEvent', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { member, name } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: name, Type: "Public Event" }).toArray();
       length = results[0].Members.length;
       for(var i=0; i<length; i++)
       {

@@ -17,7 +17,7 @@ function Events()
   console.log(priv);
   const [message1,setMessage1] = useState('');
   const [message2,setMessage2] = useState('');
-
+  
 
   const joinPriv = async event => 
     {
@@ -70,15 +70,59 @@ function Events()
 
     const joinPub = async event =>
     {
+      event.preventDefault();
+      var p = parseInt(event.target.id);
+      console.log(pub[p].Name);
       
+      
+      var obj = {member:user, name:pub[p].Name};
+          var js = JSON.stringify(obj);
+  
+          try
+          {    
+              const response = await fetch('http://localhost:5000/api/joinPubEvent',
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+  
+              var res = JSON.parse(await response.text());
+              console.log(res);
+              if(res.existing === 1)
+              {
+                setMessage1("Already Joined");
+              }
+              var obj2 = {user:user.userName};
+              var js2 = JSON.stringify(obj2);
+              const response2 = await fetch('http://localhost:5000/api/getAttendingEvents',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2);
+            localStorage.setItem('attending_events', JSON.stringify(res2.results));
+            var obj3 = {college:user.college, attend:res2.results};
+            var js3 = JSON.stringify(obj3);
+            const response3 = await fetch('http://localhost:5000/api/getEvents',
+                {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+
+            var res3 = JSON.parse(await response3.text());
+            console.log(res3);
+            localStorage.setItem('public_events', JSON.stringify(res3.public));
+            localStorage.setItem('private_events', JSON.stringify(res3.private));
+
+            window.location.href = "/home";
+               
+          }
+          catch(e)
+          {
+              alert(e.toString());
+              return;
+          }    
     }
 
     const divStyle = {
-      width: '90%',
+      width: '30%',
     };
 
     return(
-      <div>  
+      <div className="mid">  
       {/* <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
@@ -90,12 +134,13 @@ function Events()
         <br></br>
         <h4 className="col text-center text"><u><b>Attending</b></u></h4>
         <br></br>
+
         <div className="container">
           {attend.map(function(item) {
             attpos++
             
             return (<div className="card">
-              <img src="img_avatar.png" alt="Avatar" style={divStyle} />
+              {/* <img src={image} alt="Avatar" style={divStyle} /> */}
               <div className="container">
               <h4><b>Event: <b className="topic">{item.Name}</b></b></h4>
                 <h5><b>Location:</b> {item.Location}</h5>
