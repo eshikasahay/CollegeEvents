@@ -871,6 +871,70 @@ app.post('/api/joinPubEvent', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/leaveEvent', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { member, title } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: title }).toArray();
+      length = results[0].Members.length;
+      for(var i=0; i<length; i++)
+      {
+        if(results[0].Members[i].userName !== member.userName)
+        {
+          _ret.push(results[0].Members[i]);
+        }
+      }
+        console.log(_ret);
+        var query = 
+        { 
+            Name: title
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Members : _ret,
+              Total : length-1
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+        // flag = true;
+        // const user = {
+        //   Title: title,
+        //   College: results[0].College,
+        //   Description: results[0].Description,
+        //   Member: member.userName,
+        //   Total: length+1,
+        //   Accepted: results[0].Accepted,
+        // }
+        // const resultss = await db.collection('JoinedRSO').insertOne(user);
+        
+        // newValues = 
+        // {
+        //     $set:
+        //     {
+        //       Total : length+1
+        //     }
+        // };
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
 app.post('/api/getAttendingEvents', async (req, res, next) =>
 {
     var error = '';

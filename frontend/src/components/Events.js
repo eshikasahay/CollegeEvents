@@ -115,7 +115,56 @@ function Events()
               alert(e.toString());
               return;
           }    
-    }
+    };
+
+    const doLeave = async event =>
+    {
+      event.preventDefault();
+      var p = parseInt(event.target.id);
+      console.log(attend[p].Name);
+      
+      
+      var obj = {member:user, title:attend[p].Name};
+      var js = JSON.stringify(obj);
+  
+          try
+          {    
+              const response = await fetch('http://localhost:5000/api/leaveEvent',
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+  
+              var res = JSON.parse(await response.text());
+              console.log(res);
+              // if(res.existing === 1)
+              // {
+              //   setMessage1("Already Joined");
+              // }
+              var obj2 = {user:user.userName};
+              var js2 = JSON.stringify(obj2);
+              const response2 = await fetch('http://localhost:5000/api/getAttendingEvents',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+
+            var res2 = JSON.parse(await response2.text());
+            console.log(res2);
+            localStorage.setItem('attending_events', JSON.stringify(res2.results));
+            var obj3 = {college:user.college, attend:res2.results};
+            var js3 = JSON.stringify(obj3);
+            const response3 = await fetch('http://localhost:5000/api/getEvents',
+                {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+
+            var res3 = JSON.parse(await response3.text());
+            console.log(res3);
+            localStorage.setItem('public_events', JSON.stringify(res3.public));
+            localStorage.setItem('private_events', JSON.stringify(res3.private));
+
+            window.location.href = "/home";
+               
+          }
+          catch(e)
+          {
+              alert(e.toString());
+              return;
+          }    
+    };
 
     const divStyle = {
       width: '30%',
@@ -150,7 +199,7 @@ function Events()
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
                 <h6><b>Email:</b> {item.Email}<br></br>  <b>Phone:</b> {item.Phone}</h6>
-                <Button id={attpos} variant="danger">Leave</Button><br></br>
+                <Button id={attpos} variant="danger" onClick={doLeave}>Leave</Button><br></br>
                 
               </div>
             </div>)
