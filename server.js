@@ -972,6 +972,119 @@ app.post('/api/getAttendingEvents', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/getPendingEvents', async (req, res, next) =>
+{
+    var error = '';
+
+    const {user, accepted} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({Accepted: accepted}).toArray();
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/approveEvent', async (req, res, next) =>
+{
+    var error = '';
+
+    const {name,type} = req.body;
+    var results = [];
+
+    try{
+      const db = client.db();
+      var query = 
+      { 
+          Name: name,
+          Type: type
+      };
+      
+      var newValues = 
+      {
+          $set:
+          {
+            Accepted: true
+          }
+      };
+
+      results = await db.collection('Events').updateOne(query,newValues);
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getAdminOwnedRSO', async (req, res, next) =>
+{
+    var error = '';
+
+    const {admin} = req.body;
+    var results = [];
+
+    try{
+      const db = client.db();
+      results = await db.collection('RSO').find({Admin:admin, Accepted:true}).toArray();
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/CreateRsoEvent', async (req, res, next) =>
+{
+    var error = '';
+
+    const { rso, name, location, time, date, college, description, phone, email, lat, lng, user} = req.body;
+    var mem = [];
+    mem.push(user);
+    const event = {
+        RSO: rso,
+        Name: name,
+        Location: location,
+        Date: date,
+        Time: time,
+        College: college,
+        Description: description,
+        Phone: phone,
+        Email: email,
+        Members: mem,
+        Total: 1,
+        Latitude: lat,
+        Longitude: lng
+      }
+
+    try {
+      const db = client.db();
+      const result = await db.collection('Events').insertOne(event);
+    }
+    catch(e) {
+      error = "Cannot Request";
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
+
+
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');

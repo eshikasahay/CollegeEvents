@@ -26,7 +26,7 @@ function Colleges()
           {coll.result.map(function(item) {
             pos++
             
-            return (<div className="card">
+            return (<div><div className="card">
               {/* <img src="img_avatar.png" alt="Avatar" style={divStyle} /> */}
               <div className="container">
                 <h4><b>{item.Name}</b></h4>
@@ -37,7 +37,8 @@ function Colleges()
                 &nbsp;&nbsp; */}
                 <Button id={pos}>View Events</Button>
               </div>
-            </div>)
+            </div>
+            <br></br></div>)
           })}
         </div>
     </div>

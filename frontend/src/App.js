@@ -16,6 +16,8 @@ import CreateEventPage from './pages/CreateEventPage';
 import ApproveRSOPage from './pages/ApproveRSOPage';
 import DeleteRSOPage from './pages/DeleteRSOPage';
 import EditRSOPage from './pages/EditRSOPage';
+import ApproveEventsPage from './pages/ApproveEventsPage';
+import CreateRsoEventPage from './pages/CreateRsoEventPage';
 
 
 function App() {
@@ -54,6 +56,12 @@ function App() {
         </Route>
         <Route path="/editRSO" exact>
           <EditRSOPage />
+        </Route>
+        <Route path="/approveEvents" exact>
+          <ApproveEventsPage />
+        </Route>
+        <Route path="/RSOEvent" exact>
+          <CreateRsoEventPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

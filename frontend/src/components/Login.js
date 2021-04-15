@@ -37,35 +37,57 @@ function Login()
                 console.log(user);
 
                 var obj3 = {user:user.userName};
-        var js3 = JSON.stringify(obj3);
-        try
-        {
+                var js3 = JSON.stringify(obj3);
+                try
+                {
 
-            const response3 = await fetch('http://localhost:5000/api/getAttendingEvents',
-                {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+                    const response3 = await fetch('http://localhost:5000/api/getAttendingEvents',
+                        {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
 
-            var res3 = JSON.parse(await response3.text());
-            console.log(res3);
-            localStorage.setItem('attending_events', JSON.stringify(res3.results));
-            var obj4 = {college:user.college, attend:res3.results};
-            var js4 = JSON.stringify(obj4);
-            const response4 = await fetch('http://localhost:5000/api/getEvents',
-                {method:'POST',body:js4,headers:{'Content-Type': 'application/json'}});
+                    var res3 = JSON.parse(await response3.text());
+                    console.log(res3);
+                    localStorage.setItem('attending_events', JSON.stringify(res3.results));
+                    var obj4 = {college:user.college, attend:res3.results};
+                    var js4 = JSON.stringify(obj4);
+                    const response4 = await fetch('http://localhost:5000/api/getEvents',
+                        {method:'POST',body:js4,headers:{'Content-Type': 'application/json'}});
 
-            var res4 = JSON.parse(await response4.text());
-            console.log(res4);
-            localStorage.setItem('public_events', JSON.stringify(res4.public));
-            localStorage.setItem('private_events', JSON.stringify(res4.private));
+                    var res4 = JSON.parse(await response4.text());
+                    console.log(res4);
+                    localStorage.setItem('public_events', JSON.stringify(res4.public));
+                    localStorage.setItem('private_events', JSON.stringify(res4.private));
 
-            window.location.href = "/home";
-        }
-        catch(e)
-        {
-            alert(e.toString());
-            return;
-        }  
+                    window.location.href = "/home";
+                }
+                catch(e)
+                {
+                    alert(e.toString());
+                    return;
+                }  
+                if(res.Status === "Super Admin")
+                {
+                    var obj5 = {user:loginUserName.value, accepted:false};
+                    var js5 = JSON.stringify(obj5);
+                    console.log(obj5);
+                    try
+                    {    
+                        const response5 = await fetch('http://localhost:5000/api/getPendingEvents',
+                            {method:'POST',body:js5,headers:{'Content-Type': 'application/json'}});
 
-                if(res.Status === "Admin")
+                        var res5 = JSON.parse(await response5.text());
+                        localStorage.setItem('events_to_approve', JSON.stringify(res5.results));
+                        console.log(res5);
+                        console.log("^^^^");
+                        
+                    }
+                    catch(e)
+                    {
+                        // alert(e.toString());
+                        return;
+                    }
+                    
+                }
+                else if(res.Status === "Admin")
                 {
                     var obj2 = {user:loginUserName.value,approved:false,members:3,college:res.College};
                     var js2 = JSON.stringify(obj2);
@@ -81,7 +103,7 @@ function Login()
                     }
                     catch(e)
                     {
-                        alert(e.toString());
+                        // alert(e.toString());
                         return;
                     }
                     

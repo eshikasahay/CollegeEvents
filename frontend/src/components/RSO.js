@@ -42,11 +42,14 @@ function RSO()
   const [message,setMessage] = useState('');
   // const [modalShow, setModalShow] = React.useState(false);
   var rso = JSON.parse(localStorage.getItem("user_created_rso"));
+  var admin = JSON.parse(localStorage.getItem("admin_rso"));
+  console.log(admin);
   var other_rso = JSON.parse(localStorage.getItem("other_rso"));
   var joined_rso = JSON.parse(localStorage.getItem("joined_rso"));
   var other_rso_pos = -1;
   var joined_rso_pos = -1;
   var rso_pos = -1;
+  var admin_pos = -1;
   // function createMarkup() 
   // { 
   //   // return {__html: '<div class="card"><img src="img_avatar.png" alt="Avatar" style="width:100%"><div class="container"><h4><b>{rso.results[i].Title}</b></h4><p>Architect & Engineer</p></div></div>'};
@@ -317,6 +320,14 @@ function RSO()
 
   };
 
+  const doRSOEvent = async event =>
+  {
+    event.preventDefault();
+    var p = parseInt(event.target.id);
+    localStorage.setItem('rso_event', JSON.stringify(admin.results[p]));
+    window.location.href = "/RSOevent";
+  };
+
   return(
     <div>  
       {/* <MyVerticallyCenteredModal
@@ -331,6 +342,23 @@ function RSO()
         <br></br>
         {/* <div dangerouslySetInnerHTML={createMarkup()} className="card container" /> */}
         {/* <ul> */}
+        <div className="container">
+          {admin.results.map(function(item) {
+            admin_pos++
+            
+            return (<div className="card">
+              <img src="img_avatar.png" alt="Avatar" style={divStyle} />
+              <div className="container">
+                <h4><b>Organization: {item.Title}</b></h4>
+                <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
+                <p>{item.Description}</p>
+                {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
+                &nbsp;&nbsp; */}
+                <Button id={admin_pos} onClick={doRSOEvent}>Create RSO Event</Button>
+              </div>
+            </div>)
+          })}
+        </div>
         <div className="container">
           {rso.results.map(function(item) {
             rso_pos++

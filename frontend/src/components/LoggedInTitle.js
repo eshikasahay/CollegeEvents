@@ -140,7 +140,15 @@ function PageTitle()
                 var res3 = JSON.parse(await response3.text());
                 console.log(res3);
                 localStorage.setItem('joined_rso', JSON.stringify(res3));
-                console.log(res3);
+                var obj5 = {admin:user.userName};
+                var js5 = JSON.stringify(obj5);
+                const response5 = await fetch('http://localhost:5000/api/getAdminOwnedRSO',
+                    {method:'POST',body:js5,headers:{'Content-Type': 'application/json'}});
+
+                var res5 = JSON.parse(await response5.text());
+                console.log(res5);
+                localStorage.setItem('admin_rso', JSON.stringify(res5));
+                // console.log(res3);
                 window.location.href = '/rso';
                 
             }
@@ -174,7 +182,7 @@ function PageTitle()
     }
     else if(user.status === "Super Admin")
     {
-      return {__html: '<a href="/createColl" class="button">Add a University</a>'};
+      return {__html: '<a href="/createColl" class="button">Add a University</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/approveEvents" class="button">Approve Events</a>'};
       // return {__html: '<Button>Add a University</Button>'};
     } 
   };
