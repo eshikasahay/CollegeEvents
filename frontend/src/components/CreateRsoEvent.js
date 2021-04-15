@@ -8,7 +8,6 @@ function CreateRsoEvent()
     var location;
     var time;
     var date;
-    var type;
     var description;
     var phone;
     var email;
@@ -21,51 +20,50 @@ function CreateRsoEvent()
     //     console.log(type);
     // };
 
-    // const doCreateEvent = async event => 
-    // {
-    //     event.preventDefault();
-    //     var loc = JSON.parse(localStorage.getItem("location"));  
-    //     var flag = 0;
-    //     var error = [];
-    //     console.log(type.value);
-    //     if (name.value === "" || location.value === "" || date.value === "" || time.value === "Select Start Time (1-hr event)..." || type.value === "Select Event Type..." || description.value === "" || phone.value === "" || email.value === "") {
-    //         flag = 1;
-    //         error.push("Please fill out all fields\n");
-    //     }
+    const doCreateEvent = async event => 
+    {
+        event.preventDefault();
+        var loc = JSON.parse(localStorage.getItem("location"));  
+        var flag = 0;
+        var error = [];
+        if (name.value === "" || location.value === "" || date.value === "" || time.value === "Select Start Time (1-hr event)..." || description.value === "" || phone.value === "" || email.value === "") {
+            flag = 1;
+            error.push("Please fill out all fields\n");
+        }
 
-    //     if (flag === 1)
-    //     {
-    //         setMessage(error);
-    //         return;
-    //     }
+        if (flag === 1)
+        {
+            setMessage(error);
+            return;
+        }
         
         
-    //     var obj = {name:name.value, location:location.value, date:date.value, time:time.value, type:type.value, college:user.college, description:description.value, phone:phone.value, email:email.value, admin:user.userName, lat:loc.lat, lng:loc.lng, user:user};
-    //     var js = JSON.stringify(obj);
+        var obj = {rso:rso, name:name.value, location:location.value, date:date.value, time:time.value, college:user.college, description:description.value, phone:phone.value, email:email.value, lat:loc.lat, lng:loc.lng, user:user};
+        var js = JSON.stringify(obj);
 
-    //     try
-    //     {    
-    //         const response = await fetch('http://localhost:5000/api/CreateEvent',
-    //             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+        try
+        {    
+            const response = await fetch('http://localhost:5000/api/CreateRsoEvent',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-    //         var res = JSON.parse(await response.text());
+            var res = JSON.parse(await response.text());
 
-    //         if( res.error === "" )
-    //         {
-    //             // setMessage("Account Created. \nCheck your email for verification link");
-    //             setMessage("Event created. Awaiting approval.");
-    //         }
-    //         else
-    //         {
-    //             setMessage(res.error);
-    //         }
-    //     }
-    //     catch(e)
-    //     {
-    //         alert(e.toString());
-    //         return;
-    //     }    
-    // }; 
+            if( res.error === "" )
+            {
+                // setMessage("Account Created. \nCheck your email for verification link");
+                setMessage("Event created. Awaiting approval.");
+            }
+            else
+            {
+                setMessage(res.error);
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
+    }; 
 
     return(
         <div className="container more">
@@ -151,7 +149,7 @@ function CreateRsoEvent()
          <br></br>
          <br></br>
 
-         <Button size="lg" variant="primary" type="submit"  block>
+         <Button size="lg" variant="primary" type="submit" onClick={doCreateEvent} block>
                  Create Event
              </Button>
              <br></br>
