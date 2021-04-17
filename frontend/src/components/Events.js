@@ -6,15 +6,17 @@ function Events()
   var loginUserName;
   var loginPassword;
   var attend = JSON.parse(localStorage.getItem("attending_events"));
-  console.log(attend);
+  // console.log(attend);
   var attpos = -1;
   var user = JSON.parse(localStorage.getItem("user_data"));
   var privpos = -1;
   var pubpos = -1;
   var pub = JSON.parse(localStorage.getItem("public_events"));
-  console.log(pub);
+  // console.log(pub);
   var priv = JSON.parse(localStorage.getItem("private_events"));
-  console.log(priv);
+  // console.log(priv);
+  var rso = JSON.parse(localStorage.getItem("user_rso_events"));
+  console.log(rso);
   const [message1,setMessage1] = useState('');
   const [message2,setMessage2] = useState('');
   

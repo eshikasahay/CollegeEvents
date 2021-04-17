@@ -94,6 +94,14 @@ function PageTitle()
             console.log(res);
             localStorage.setItem('public_events', JSON.stringify(res.public));
             localStorage.setItem('private_events', JSON.stringify(res.private));
+            // var obj3 = {user:user.userName};
+            //     var js3 = JSON.stringify(obj3);
+            //     const response3 = await fetch('http://localhost:5000/api/getRSOEvents',
+            //         {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+
+            //     var res3 = JSON.parse(await response3.text());
+            //     console.log(res3);
+            //     localStorage.setItem('user_rso_events', JSON.stringify(res3.results));
 
             window.location.href = "/home";
         }

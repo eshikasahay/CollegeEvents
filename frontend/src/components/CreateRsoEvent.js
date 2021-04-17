@@ -38,7 +38,7 @@ function CreateRsoEvent()
         }
         
         
-        var obj = {rso:rso, name:name.value, location:location.value, date:date.value, time:time.value, college:user.college, description:description.value, phone:phone.value, email:email.value, lat:loc.lat, lng:loc.lng, user:user};
+        var obj = {rso:rso.Title, name:name.value, location:location.value, date:date.value, time:time.value, college:user.college, description:description.value, phone:phone.value, email:email.value, lat:loc.lat, lng:loc.lng, user:user};
         var js = JSON.stringify(obj);
 
         try
@@ -51,7 +51,7 @@ function CreateRsoEvent()
             if( res.error === "" )
             {
                 // setMessage("Account Created. \nCheck your email for verification link");
-                setMessage("Event created. Awaiting approval.");
+                setMessage("Event created");
             }
             else
             {

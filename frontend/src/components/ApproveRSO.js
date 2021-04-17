@@ -10,7 +10,8 @@ function ApproveRSO()
     var admin;
     const [message,setMessage] = useState('');
     var user = JSON.parse(localStorage.getItem("user_data"));
-    var rso_to_approve = JSON.parse(localStorage.getItem("rso_to_approve"));
+    var rso = JSON.parse(localStorage.getItem("approve_rso"));
+    console.log(rso);
     var rso_pos = -1;
 
     const divStyle = {
@@ -22,7 +23,7 @@ function ApproveRSO()
         event.preventDefault();
         var error = [];
         var p = parseInt(event.target.id);
-        var obj2 = {title:rso_to_approve.results[p].Title};
+        var obj2 = {title:rso.results[p].Title,total:rso.results[p].Total};
         var js2 = JSON.stringify(obj2);
 
         try
@@ -44,7 +45,7 @@ function ApproveRSO()
                             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
                         var res = JSON.parse(await response.text());
-                        localStorage.setItem('rso_to_approve', JSON.stringify(res));
+                        localStorage.setItem('approve_rso', JSON.stringify(res));
                         
                     }
                     catch(e)
@@ -70,7 +71,7 @@ function ApproveRSO()
           <h2 className="text col text-center"><b>Pending Approvals</b></h2>
         <br></br>
         <div className="container">
-          {rso_to_approve.results.map(function(item) {
+          {rso.results.map(function(item) {
             rso_pos++
             
             return (<div className="card">

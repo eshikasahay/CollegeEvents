@@ -320,6 +320,50 @@ function RSO()
 
   };
 
+  const viewAdminEvents = async event =>
+  {
+    event.preventDefault();
+    var p = parseInt(event.target.id);
+    var obj3 = {title:admin.results[p].Title};
+    var js3 = JSON.stringify(obj3);
+    const response3 = await fetch('http://localhost:5000/api/getRSOEvents',
+        {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+    var res3 = JSON.parse(await response3.text());
+    console.log(res3);
+    localStorage.setItem('user_rso_events', JSON.stringify(res3.results));
+    window.location.href = "/privateRSOEvent";
+  };
+
+  const viewEvents = async event =>
+  {
+    event.preventDefault();
+    var p = parseInt(event.target.id);
+    var obj3 = {title:rso.results[p].Title};
+    var js3 = JSON.stringify(obj3);
+    const response3 = await fetch('http://localhost:5000/api/getRSOEvents',
+        {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+    var res3 = JSON.parse(await response3.text());
+    console.log(res3);
+    localStorage.setItem('user_rso_events', JSON.stringify(res3.results));
+    window.location.href = "/privateRSOEvent";
+
+  };
+
+  const viewEvents2 = async event =>
+  {
+    event.preventDefault();
+    var p = parseInt(event.target.id);
+    var obj3 = {title:joined_rso.results[p].Title};
+    var js3 = JSON.stringify(obj3);
+    const response3 = await fetch('http://localhost:5000/api/getRSOEvents',
+        {method:'POST',body:js3,headers:{'Content-Type': 'application/json'}});
+    var res3 = JSON.parse(await response3.text());
+    console.log(res3);
+    localStorage.setItem('user_rso_events', JSON.stringify(res3.results));
+    window.location.href = "/privateRSOEvent";
+
+  };
+
   const doRSOEvent = async event =>
   {
     event.preventDefault();
@@ -354,7 +398,8 @@ function RSO()
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
-                <Button id={admin_pos} onClick={doRSOEvent}>Create RSO Event</Button>
+                <Button id={admin_pos} onClick={doRSOEvent}>Create RSO Event</Button>&nbsp;&nbsp;
+                <Button id={admin_pos} onClick={viewAdminEvents}>Events</Button>
               </div>
             </div>)
           })}
@@ -385,7 +430,9 @@ function RSO()
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
-                <Button variant="danger" id={rso_pos} onClick={doDelete}>Delete</Button>
+                <Button variant="danger" id={rso_pos} onClick={doDelete}>Delete</Button>&nbsp;&nbsp;
+                <Button id={rso_pos} onClick={viewEvents}>Events</Button>
+
               </div>
             </div>)
           })}
@@ -393,6 +440,10 @@ function RSO()
         <div className="container">
           {joined_rso.results.map(function(item) {
             joined_rso_pos++
+            if(item.CreatedBy === user.userName)
+            {
+              return (<div></div>)
+            }
             if(item.Accepted === false)
             {
               return (<div className="card">
@@ -412,8 +463,8 @@ function RSO()
                 <h4><b>Organization: {item.Title}</b></h4>
                 <h6>College: {item.College}<br></br>Total Members: {item.Total}</h6>
                 <p>{item.Description}</p>
-                <Button id={joined_rso_pos} variant="danger" onClick={doLeave}>Leave</Button>
-                
+                <Button id={joined_rso_pos} variant="danger" onClick={doLeave}>Leave</Button>&nbsp;&nbsp;
+                <Button id={joined_rso_pos} onClick={viewEvents2}>Events</Button>
               </div>
             
             </div>)

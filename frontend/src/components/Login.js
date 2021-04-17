@@ -98,7 +98,7 @@ function Login()
                             {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
 
                         var res2 = JSON.parse(await response2.text());
-                        localStorage.setItem('rso_to_approve', JSON.stringify(res2));
+                        localStorage.setItem('approve_rso', JSON.stringify(res2));
                         
                     }
                     catch(e)

@@ -138,9 +138,20 @@ app.post('/api/CreateRso', async (req, res, next) =>
         Accepted: false
     }
 
+    const jrso = {
+      Title: title,
+      College: college,
+      Description: description,
+      CreatedBy: username,
+      Member: username,
+      Total: total,
+      Accepted: false
+  }
+
     try {
       const db = client.db();
       const result = await db.collection('RSO').insertOne(rso);
+      const results = await db.collection('JoinedRSO').insertOne(jrso);
     }
     catch(e) {
       error = "Cannot Request";
@@ -239,7 +250,7 @@ app.post('/api/otherRSOs', async (req, res, next) =>
     var flag = 0;
     try{
       const db = client.db();
-      results = await db.collection('RSO').find({ CreatedBy: { $ne: user } }).toArray();
+      results = await db.collection('RSO').find({ CreatedBy: { $ne: user }, Admin: { $ne: user } }).toArray();
       // console.log(results);
       var length = results.length;
       for(var i=0; i<length; i++)
@@ -321,6 +332,7 @@ app.post('/api/joinRSO', async (req, res, next) =>
           Title: title,
           College: results[0].College,
           Description: results[0].Description,
+          CreatedBy: results[0].CreatedBy,
           Member: member.userName,
           Total: length+1,
           Accepted: results[0].Accepted,
@@ -335,7 +347,7 @@ app.post('/api/joinRSO', async (req, res, next) =>
             }
         };
   
-        var result = await db.collection('JoinedRSO').updateOne(query,newValues);
+        var result = await db.collection('JoinedRSO').updateMany(query,newValues);
       }
     
     }
@@ -425,7 +437,10 @@ app.post('/api/getAdminRSO', async (req, res, next) =>
     try{
       const db = client.db();
       results = await db.collection('RSO').find({Admin:user, Accepted:approved, Total:{ $gt: members }}).toArray();
+      console.log("XXXXXXXXXXXXXXXXXX");
       console.log(results);
+      console.log("XXXXXXXXXXXXXXXXXX");
+
     }
     catch(e){
       error=e.toString();
@@ -448,13 +463,16 @@ app.post('/api/getJoinedRSO', async (req, res, next) =>
     try{
       const db = client.db();
       results = await db.collection('JoinedRSO').find({Member:user}).toArray();
-      // console.log(results);
+      console.log(results);
       var length = results.length;
       for(var i=0; i<length; i++)
       {
-        _ret.push(results[i]);
+        if(results[i].CreatedBy !== user)
+        {
+          _ret.push(results[i]);
+        }  
       }
-    
+      console.log(_ret);
     }
     catch(e){
       error=e.toString();
@@ -468,7 +486,7 @@ app.post('/api/approveRSO', async (req, res, next) =>
 {
     var error = '';
 
-    const {title} = req.body;
+    const {title, total} = req.body;
     var results = [];
 
     try{
@@ -482,11 +500,28 @@ app.post('/api/approveRSO', async (req, res, next) =>
       {
           $set:
           {
-            Accepted : true
+            Accepted : true,
+            Total: total+1
           }
       };
 
       results = await db.collection('RSO').updateOne(query,newValues);
+      query = 
+      { 
+          Title: title
+      };
+      
+      newValues = 
+      {
+          $set:
+          {
+            Accepted : true,
+            Total: total+1
+          }
+      };
+
+      results = await db.collection('JoinedRSO').updateMany(query,newValues);
+
       console.log(results);
     }
     catch(e){
@@ -1061,6 +1096,7 @@ app.post('/api/CreateRsoEvent', async (req, res, next) =>
         Location: location,
         Date: date,
         Time: time,
+        Type: "RSO",
         College: college,
         Description: description,
         Phone: phone,
@@ -1083,6 +1119,53 @@ app.post('/api/CreateRsoEvent', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/getRSOEvents', async (req, res, next) =>
+{
+    var error = '';
+
+    const {title} = req.body;
+    // console.log(user);
+    var arr = [];
+    var _ret = [];
+    var results = [];
+    var results2 = [];
+    var flag = 0;
+    try{
+      const db = client.db();
+      results2 = await db.collection('Events').find({RSO: title, Type: "RSO"}).toArray();
+      // var len = results2.length;
+      // for(var i = 0; i<len; i++)
+      // {
+      //   var r = await db.collection('Events').find({Type: "RSO", Name:results2[i].Title}).toArray();
+      //   var le = r.length;
+      //   for(var j=0; j<le; j++)
+      //   {
+      //     _ret.push(r[j]);
+      //   }
+      // }
+      // results = await db.collection('Events').find({Type: "RSO"}).toArray();
+      // console.log(results);
+    //   var length = results.length;
+    //   for(var i=0; i<length; i++)
+    //   {
+    //     var l = results[i].Members.length;
+    //     for(var j=0; j<l; j++)
+    //     {
+    //       if(user === results[i].Members[j].userName)
+    //       {
+    //         _ret.push(results[i]);
+    //       }
+    //     }
+    //   }
+    // console.log(_ret);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results2, error: error };
+    res.status(200).json(ret);
+});
 
 
 app.use((req, res, next) => 
