@@ -11,9 +11,29 @@ function Colleges()
   var pos = -1;
   const [message,setMessage] = useState('');
 
-  const doColleges = async event => 
+  const doView = async event => 
   {
-        
+    event.preventDefault();
+    var p = parseInt(event.target.id);
+    // var college = {college:coll.result[p].Name};
+    // localStorage.setItem('college_event', JSON.stringify(college));
+    var obj = {college:coll.result[p].Name, user_coll:user.college};
+    var js = JSON.stringify(obj);
+    try{
+      const response = await fetch('http://localhost:5000/api/viewCollegeEvents',
+       {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+      var res = JSON.parse(await response.text());
+      console.log(res);
+      localStorage.setItem('pub_events', JSON.stringify(res.pub));
+      localStorage.setItem('priv_events', JSON.stringify(res.priv));
+      window.location.href = "/personalCollegeEvents";
+    }
+    catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
+    
   };
 
 
@@ -35,7 +55,7 @@ function Colleges()
                 <p>{item.Description}</p>
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
-                <Button id={pos}>View Events</Button>
+                <Button id={pos} onClick={doView}>View Events</Button>
               </div>
             </div>
             <br></br></div>)

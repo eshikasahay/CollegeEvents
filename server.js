@@ -1167,6 +1167,49 @@ app.post('/api/getRSOEvents', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/viewCollegeEvents', async (req, res, next) =>
+{
+    var error = [];
+    const { college, user_coll } = req.body;
+    var results1 = [];
+    var results = [];
+    var flag = 0;
+    try{
+      const db = client.db();
+      // results = await db.collection('Events').find({ College: college, Type: { $ne: "RSO" } }).toArray();
+      if(user_coll === college)
+      {
+        results1 = await db.collection('Events').find({ College: college, Type: "Private Event" }).toArray();
+      }
+      results = await db.collection('Events').find({ College: college, Type: "Public Event" }).toArray();
+      // console.log(results);
+      // for(var i=0; i<length; i++)
+      // {
+      //   flag = 0;
+      //   var memLength = results[i].Members.length;
+      //   for(var j=0; j<memLength; j++)
+      //   {
+      //     if(results[i].Members[j].userName === user)
+      //     {
+      //       flag = 1;
+      //       break;
+      //     }
+      //   }
+      //   if(!flag)
+      //   {
+      //     _ret.push(results[i]);
+      //   }
+        
+      // }
+      
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { pub: results, priv:results1, error: error };
+    res.status(200).json(ret);
+});
 
 app.use((req, res, next) => 
 {
