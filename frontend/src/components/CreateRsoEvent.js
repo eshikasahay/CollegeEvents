@@ -37,12 +37,21 @@ function CreateRsoEvent()
             return;
         }
         
-        
-        var obj = {rso:rso.Title, name:name.value, location:location.value, date:date.value, time:time.value, college:user.college, description:description.value, phone:phone.value, email:email.value, lat:loc.lat, lng:loc.lng, user:user};
-        var js = JSON.stringify(obj);
+        var obj1 = {location:location.value, date:date.value, time:time.value};
+        var js1 = JSON.stringify(obj1);
 
-        try
-        {    
+        try{
+            const response1 = await fetch('http://localhost:5000/api/checkTime',
+            {method:'POST',body:js1,headers:{'Content-Type': 'application/json'}});
+
+            var res1 = JSON.parse(await response1.text());
+            if(res1.results.length > 0)
+            {
+                setMessage("Time unavailable");
+                return;
+            }
+            var obj = {rso:rso.Title, name:name.value, location:location.value, date:date.value, time:time.value, college:user.college, description:description.value, phone:phone.value, email:email.value, lat:loc.lat, lng:loc.lng, user:user};
+            var js = JSON.stringify(obj);
             const response = await fetch('http://localhost:5000/api/CreateRsoEvent',
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
@@ -62,7 +71,7 @@ function CreateRsoEvent()
         {
             alert(e.toString());
             return;
-        }    
+        }  
     }; 
 
     return(

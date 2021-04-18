@@ -1397,6 +1397,28 @@ app.post('/api/editComment', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/checkTime', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { location, date, time } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Location:location, Date:date, Time:time }).toArray();
+      console.log(results);
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
+    res.status(200).json(ret);
+});
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');
