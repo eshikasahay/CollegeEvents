@@ -1270,8 +1270,55 @@ app.post('/api/addComment', async (req, res, next) =>
       {
         _ret.push(results[0].Comments[i]);
       }
-      var add = {Comment:comment, Rating:rating, First:user.firstName, Last:user.lastName};
+      var add = {Comment:comment, Rating:rating, First:user.firstName, Last:user.lastName, UserName:user.userName};
       _ret.push(add);
+      // console.log(!_ret.includes(member));
+        var query = 
+        { 
+            Name: name
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Comments : _ret
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+        result = await db.collection('Events').find({Name:name}).toArray();
+      
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { result: result, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/deleteComment', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { user, name, comment, rating } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: name}).toArray();
+      length = results[0].Comments.length;
+      for(var i=0; i<length; i++)
+      {
+        if(results[0].Comments[i].Comment !== comment && results[0].Comments[i].Rating !== rating && results[0].Comments[i].First !== user.firstName && results[0].Comments[i].Last !== user.lastName && results[0].Comments[i].UserName !== user.userName)
+        {
+          _ret.push(results[0].Comments[i]);
+        }
+      }
       // console.log(!_ret.includes(member));
         var query = 
         { 

@@ -50,53 +50,43 @@ function Discussion()
 
     };
 
-    // const doApprove = async event => 
-    // {
-    //     event.preventDefault();
-    //     var error = [];
-    //     var p = parseInt(event.target.id);
-    //     var obj2 = {name:events_to_approve[p].Name,type:events_to_approve[p].Type};
-    //     console.log(events_to_approve[p].Name)
-    //     var js2 = JSON.stringify(obj2);
+    const doEdit = async event => 
+    {
+        event.preventDefault();
+        var error = [];
+        var p = parseInt(event.target.id);   
+        console.log(discussion.Comments[p]);         
+    }; 
 
-    //     try
-    //     {    
-    //         const response2 = await fetch('http://localhost:5000/api/approveEvent',
-    //             {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
+    const doDelete = async event => 
+    {
+        event.preventDefault();
+        var error = [];
+        var p = parseInt(event.target.id); 
+        console.log(discussion.Comments[p]);     
+        var obj2 = {user:user,name:discussion.Name,comment:comment.value,rating:rating.value};
+        console.log(obj2);
+        var js2 = JSON.stringify(obj2);
 
-    //         var res2 = JSON.parse(await response2.text());
-    //         // setMessage("Event has been Approved");
-    //         //reset event_to_approve
-    //         if(user.status === "Super Admin")
-    //             {
-    //                 var obj = {user:user.userName,accepted:false};
-    //                 var js = JSON.stringify(obj);
+        try
+        {    
+            const response2 = await fetch('http://localhost:5000/api/deleteComment',
+                {method:'POST',body:js2,headers:{'Content-Type': 'application/json'}});
 
-    //                 try
-    //                 {    
-    //                     const response = await fetch('http://localhost:5000/api/getPendingEvents',
-    //                         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            var res2 = JSON.parse(await response2.text());
+            setMessage("");
+            // var d = {Name:res2.result.Name, Comments:res2.result.Comments};
+            localStorage.setItem('discussion', JSON.stringify(res2.result[0]));
+            console.log(res2.result);
+            window.location.href = "/discussion";
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }
 
-    //                     var res = JSON.parse(await response.text());
-    //                     localStorage.setItem('events_to_approve', JSON.stringify(res.results));
-    //                     window.location.href = "/approveEvents";
-    //                 }
-    //                 catch(e)
-    //                 {
-    //                     alert(e.toString());
-    //                     return;
-    //                 }
-                    
-    //             }
-    //     }
-    //     catch(e)
-    //     {
-    //         alert(e.toString());
-    //         return;
-    //     }    
-        
-            
-    // }; 
+    }; 
 
     return(
       <div>
@@ -137,6 +127,17 @@ function Discussion()
             <div className="container">
             {discussion.Comments.map(function(item) {
                 event_pos++
+                if(item.UserName === user.userName)
+                {
+                    return (<div className="card">
+                    <div className="container">
+                    <h6>{item.First} {item.Last} gave {item.Rating} stars</h6>
+                    <p>{item.Comment}</p>
+                    <Button size="sm" id={event_pos} onClick={doEdit}>Edit</Button>&nbsp;&nbsp;
+                    <Button size="sm" id={event_pos} variant="danger" onClick={doDelete}>Delete</Button>
+                    </div>
+                    </div>)
+                }
                 
                 return (<div className="card">
                 <div className="container">
