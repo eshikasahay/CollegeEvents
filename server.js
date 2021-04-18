@@ -64,13 +64,14 @@ app.post('/api/Register', async (req, res, next) =>
 {
     var error = '';
 
-    const { firstname, lastname, email, college, login, password, type } = req.body;
+    const { firstname, lastname, email, college, login, password, type, pid } = req.body;
     var hashedPass = hashPass.generate(password);
 
     const user = {
         FirstName: firstname,
         LastName: lastname,
         Email: email,
+        PID: pid,
         College: college,
         UserName: login.toLowerCase(),
         Password: hashedPass,
@@ -80,16 +81,7 @@ app.post('/api/Register', async (req, res, next) =>
 
     try {
       const db = client.db();
-      const result1 = await db.collection('University').find({Name: college}).toArray();
-      console.log(result1);
-      if(result1.length <= 0 && college !== "")
-      {
-        error = "University does not exist";
-      }
-      else
-      {
         const result = await db.collection('Users').insertOne(user);
-      }
       
 
       // using Twilio SendGrid's v3 Node.js Library
@@ -238,6 +230,26 @@ app.post('/api/searchAdmin', async (req, res, next) =>
     }
     
     var ret = { results: _ret, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getAllCollege', async (req, res, next) =>
+{
+    var error = [];
+    const { username } = req.body;
+    var _ret = 0;
+    var results = [];
+    try{
+      const db = client.db();
+      results = await db.collection('University').find().toArray();
+      
+    }
+    // }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results: results, error: error };
     res.status(200).json(ret);
 });
 

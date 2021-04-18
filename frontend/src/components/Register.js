@@ -5,14 +5,14 @@ function Register()
 {
     var firstName;
     var lastName;
-    var email;
+    var email, pid;
     var userName;
     var password;
     var confirmPass;
     var college;
     const [message,setMessage] = useState('');
     var type;
-
+    var rand = JSON.parse(localStorage.getItem("colleges_reg"));
     // const onChangeChoice = async event => {
     //     type = event.target.value;
     //     console.log(type);
@@ -26,14 +26,15 @@ function Register()
         var error = [];
         console.log(type.value);
 
-        if(type.value === "Super Admin" && college.value === "" && firstName.value && lastName.value && email.value && password.value && confirmPass.value)
+        if(pid.value && type.value === "Super Admin" && college.value === "University (Blank if Super Admin)..." && firstName.value && lastName.value && email.value && password.value && confirmPass.value)
         {
             flag = 1;
         }
 
         if(flag === 0)
         {
-            if (type.value === "" || type.value === "Choose Account Type..." || firstName.value === "" || college.value === "" || lastName.value === "" || email.value === "" || password.value === "" || confirmPass.value === "") {
+            if (pid.value === "" || 
+            type.value === "" || type.value === "Choose Account Type..." || firstName.value === "" || college.value === "University (Blank if Super Admin)..." || lastName.value === "" || email.value === "" || password.value === "" || confirmPass.value === "") {
                 error.push("Please fill out all fields\n");
                 setMessage(error);
                 return;
@@ -47,7 +48,7 @@ function Register()
             return;
         }
 
-        var obj = {firstname:firstName.value, lastname:lastName.value, email:email.value, college:college.value, login:userName.value, password:password.value, type:type.value};
+        var obj = {firstname:firstName.value, lastname:lastName.value, email:email.value, college:college.value, login:userName.value, password:password.value, type:type.value, pid:pid.value};
         var js = JSON.stringify(obj);
 
         try
@@ -87,11 +88,28 @@ function Register()
             <Form.Group controlId="formBasicLast">
                 <Form.Control className="login-input" type="lname" placeholder="Last Name" ref={(c) => lastName = c}/>
             </Form.Group>
+            <Form.Group controlId="formBasicLast">
+                <Form.Control className="login-input"
+                 placeholder="PID" ref={(c) => pid = c}/>
+            </Form.Group>
             <Form.Group controlId="formBasicEmailAdr">
                 <Form.Control className="login-input" type="email" placeholder="Email" ref={(c) => email = c}/>
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
+            {/* <Form.Group controlId="formBasicPassword">
                 <Form.Control className="login-input" type="college" placeholder="University  (Blank if Super Admin)" ref={(c) => college = c}/>
+            </Form.Group> */}
+            <Form.Group controlId="exampleForm.ControlSelect1">
+                {/* <Form.Label>Example select</Form.Label> */}
+                <Form.Control as="select" custom  ref={(c) => college = c}>
+                <option>University (Blank if Super Admin)...</option>
+                {rand.map(function(item) {
+                    
+                    return (<option>{item.Name}</option>)
+                })}
+                {/* <option>Student</option>
+                <option>Admin</option>
+                <option>Super Admin</option> */}
+                </Form.Control>
             </Form.Group>
             <Form.Group controlId="formBasicUsername">
                 <Form.Control className="login-input" type="username" placeholder="Username" ref={(c) => userName = c}/>

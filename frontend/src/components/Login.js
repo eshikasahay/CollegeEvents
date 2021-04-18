@@ -119,6 +119,29 @@ function Login()
         }    
     };
 
+    const getCollege = async event =>
+    {
+        event.preventDefault();
+        var obj = {username:"blah"};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch('http://localhost:5000/api/getAllCollege',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+            localStorage.setItem('colleges_reg', JSON.stringify(res.results));
+            console.log(res.results);
+            window.location.href = "/register";
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }
+    };
+
 
     return(
     <div>  
@@ -142,7 +165,7 @@ function Login()
             <div className="col text-center">
                 {/* <a href="/ForgotPassword">Forgot Password?</a><br></br> */}
                 {/* <span className="divider"></span> */}
-                <a href="/register" className="link">Create an account</a>
+                <a onClick={getCollege} href="/register" className="link">Create an account</a>
             </div>
         </Form>
         
