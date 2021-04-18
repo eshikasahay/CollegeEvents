@@ -168,6 +168,33 @@ function Events()
           }    
     };
 
+    const discussion1 = async event =>
+    {
+      event.preventDefault();
+      var p = parseInt(event.target.id);
+      console.log(attend[p].Name);
+      localStorage.setItem('discussion', JSON.stringify(attend[p]));
+      window.location.href="/discussion";
+    };
+
+    const discussion2 = async event =>
+    {
+      event.preventDefault();
+      var p = parseInt(event.target.id);
+      console.log(priv[p].Name);
+      localStorage.setItem('discussion', JSON.stringify(priv[p]));
+      window.location.href="/discussion";
+    };
+
+    const discussion3 = async event =>
+    {
+      event.preventDefault();
+      var p = parseInt(event.target.id);
+      console.log(pub[p].Name);
+      localStorage.setItem('discussion', JSON.stringify(pub[p]));
+      window.location.href="/discussion";
+    };
+
     const divStyle = {
       width: '30%',
     };
@@ -201,7 +228,8 @@ function Events()
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
                 <h6><b>Email:</b> {item.Email}<br></br>  <b>Phone:</b> {item.Phone}</h6>
-                <Button id={attpos} variant="danger" onClick={doLeave}>Leave</Button><br></br>
+                <Button id={attpos} variant="danger" onClick={doLeave}>Leave</Button>&nbsp;&nbsp;
+                <Button id={attpos} onClick={discussion1}>Discussion</Button><br></br>
                 
               </div>
             </div>)
@@ -228,6 +256,8 @@ function Events()
                 &nbsp;&nbsp; */}
                 <h6><b>Email:</b> {item.Email}<br></br>  <b>Phone:</b> {item.Phone}</h6>
                 <Button id={privpos} onClick={joinPriv}>Attend</Button><br></br>
+                &nbsp;&nbsp;
+                <Button id={privpos} onClick={discussion2}>Discussion</Button><br></br>
                 <span className="rso-pending">{message1}</span>
               </div>
             </div>)
@@ -253,7 +283,8 @@ function Events()
                 {/* <Button id={rso_pos} onClick={doEdit}>Edit</Button>
                 &nbsp;&nbsp; */}
                 <h6><b>Email:</b> {item.Email}  <br></br><b>Phone:</b> {item.Phone}</h6>
-                <Button id={pubpos} onClick={joinPub}>Attend</Button>
+                <Button id={pubpos} onClick={joinPub}>Attend</Button>&nbsp;&nbsp;
+                <Button id={pubpos} onClick={discussion3}>Discussion</Button><br></br>
               </div>
             </div>)
           })}

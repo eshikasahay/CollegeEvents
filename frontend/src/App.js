@@ -20,6 +20,7 @@ import ApproveEventsPage from './pages/ApproveEventsPage';
 import CreateRsoEventPage from './pages/CreateRsoEventPage';
 import RSOEventsPage from './pages/RSOEventsPage';
 import ViewCollEventsPage from './pages/ViewCollEventsPage';
+import DiscussionPage from './pages/DiscussionPage';
 
 
 function App() {
@@ -70,6 +71,9 @@ function App() {
         </Route>
         <Route path="/personalCollegeEvents" exact>
           <ViewCollEventsPage />
+        </Route>
+        <Route path="/discussion" exact>
+          <DiscussionPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

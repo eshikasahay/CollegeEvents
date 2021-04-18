@@ -683,6 +683,7 @@ app.post('/api/CreateEvent', async (req, res, next) =>
         Admin: admin,
         Latitude: lat,
         Longitude: lng,
+        Comments: [],
         Accepted: false
     }
 
@@ -1208,6 +1209,93 @@ app.post('/api/viewCollegeEvents', async (req, res, next) =>
     }
     
     var ret = { pub: results, priv:results1, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/getComments', async (req, res, next) =>
+{
+    var error = [];
+    const { name } = req.body;
+    var results1 = [];
+    var results = [];
+    var flag = 0;
+    try{
+      const db = client.db();
+      // results = await db.collection('Events').find({ College: college, Type: { $ne: "RSO" } }).toArray();
+    
+      results = await db.collection('Events').find({ Name: name }).toArray();
+      // console.log(results);
+      // for(var i=0; i<length; i++)
+      // {
+      //   flag = 0;
+      //   var memLength = results[i].Members.length;
+      //   for(var j=0; j<memLength; j++)
+      //   {
+      //     if(results[i].Members[j].userName === user)
+      //     {
+      //       flag = 1;
+      //       break;
+      //     }
+      //   }
+      //   if(!flag)
+      //   {
+      //     _ret.push(results[i]);
+      //   }
+        
+      // }
+      
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { results:results, error: error };
+    res.status(200).json(ret);
+});
+
+app.post('/api/addComment', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { user, name, comment, rating } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: name}).toArray();
+      length = results[0].Comments.length;
+      for(var i=0; i<length; i++)
+      {
+        _ret.push(results[0].Comments[i]);
+      }
+      var add = {Comment:comment, Rating:rating, First:user.firstName, Last:user.lastName};
+      _ret.push(add);
+      // console.log(!_ret.includes(member));
+        var query = 
+        { 
+            Name: name
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Comments : _ret
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+        result = await db.collection('Events').find({Name:name}).toArray();
+      
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { result: result, error: error };
     res.status(200).json(ret);
 });
 
