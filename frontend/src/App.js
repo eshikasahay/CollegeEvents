@@ -21,6 +21,7 @@ import CreateRsoEventPage from './pages/CreateRsoEventPage';
 import RSOEventsPage from './pages/RSOEventsPage';
 import ViewCollEventsPage from './pages/ViewCollEventsPage';
 import DiscussionPage from './pages/DiscussionPage';
+import EditCommentPage from './pages/EditCommentPage';
 
 
 function App() {
@@ -74,6 +75,9 @@ function App() {
         </Route>
         <Route path="/discussion" exact>
           <DiscussionPage />
+        </Route>
+        <Route path="/editComment" exact>
+          <EditCommentPage />
         </Route>
         <Redirect to="/" />
       </Switch>  

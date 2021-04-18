@@ -55,7 +55,10 @@ function Discussion()
         event.preventDefault();
         var error = [];
         var p = parseInt(event.target.id);   
-        console.log(discussion.Comments[p]);         
+        console.log(discussion.Comments[p]); 
+        var d = {Name:discussion.Name, Comment:discussion.Comments[p]};
+        localStorage.setItem('editComment', JSON.stringify(d));
+        window.location.href = "/editComment";
     }; 
 
     const doDelete = async event => 
@@ -131,8 +134,8 @@ function Discussion()
                 {
                     return (<div className="card">
                     <div className="container">
-                    <h6>{item.First} {item.Last} gave {item.Rating} stars</h6>
-                    <p>{item.Comment}</p>
+                    <h6><i>{item.First} {item.Last}</i> gave {item.Rating} stars</h6>
+                    <p> {item.Comment}</p>
                     <Button size="sm" id={event_pos} onClick={doEdit}>Edit</Button>&nbsp;&nbsp;
                     <Button size="sm" id={event_pos} variant="danger" onClick={doDelete}>Delete</Button>
                     </div>
@@ -141,8 +144,8 @@ function Discussion()
                 
                 return (<div className="card">
                 <div className="container">
-                    <h6>{item.First} {item.Last} gave {item.Rating} stars</h6>
-                    <p>{item.Comment}</p>
+                    <h6><i>{item.First} {item.Last}</i> gave {item.Rating} stars</h6>
+                    <p> {item.Comment}</p>
                 </div>
                 </div>)
             })}

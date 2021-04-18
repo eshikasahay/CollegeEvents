@@ -1346,6 +1346,57 @@ app.post('/api/deleteComment', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/editComment', async (req, res, next) =>
+{
+    var error = [];
+    var flag = 0;
+    const { before, newcomment, newrating } = req.body;
+    var _ret = [];
+    var results = [];
+    var length;
+
+    try{
+      const db = client.db();
+      results = await db.collection('Events').find({ Name: before.Name}).toArray();
+      length = results[0].Comments.length;
+      for(var i=0; i<length; i++)
+      {
+        if(results[0].Comments[i].Comment === before.Comment.Comment && results[0].Comments[i].Rating === before.Comment.Rating && results[0].Comments[i].First === before.Comment.First && results[0].Comments[i].Last === before.Comment.Last && results[0].Comments[i].UserName === before.Comment.UserName)
+        {
+          var add = {Comment:newcomment, Rating:newrating, First:before.Comment.First, Last:before.Comment.Last, UserName:before.Comment.UserName};
+          _ret.push(add);
+        }
+        else{
+          _ret.push(results[0].Comments[i]);
+        }
+      }
+      // console.log(!_ret.includes(member));
+        var query = 
+        { 
+            Name: before.Name
+        };
+        
+        var newValues = 
+        {
+            $set:
+            {
+              Comments : _ret
+            }
+        };
+  
+        var result = await db.collection('Events').updateOne(query,newValues);
+        result = await db.collection('Events').find({Name:before.Name}).toArray();
+      
+    
+    }
+    catch(e){
+      error=e.toString();
+    }
+    
+    var ret = { result: result, error: error };
+    res.status(200).json(ret);
+});
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');
